@@ -1,6 +1,6 @@
 <?php
 
-namespace Alpixel\Component\MediaBundle;
+namespace Alpixel\Bundle\MediaBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
