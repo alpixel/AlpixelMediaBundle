@@ -1,0 +1,12 @@
+{% block media_widget %}
+{% spaceless %}
+    {% if value is not empty %}
+        {% set media = mediaManager.findFromSecret(value) %}
+        {% if media is not empty %}
+            {% set mediaPath = mediaManager.getSecretPath(media) %}
+            <a href='{{mediaPath}}' target='_blank'><img src="{{mediaPath}}/okaz_small" alt=""/></a>
+            <input type="hidden" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}/>
+        {% endif %}
+    {% endif %}
+{% endspaceless %}
+{% endblock %}

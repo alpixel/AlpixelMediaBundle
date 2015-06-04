@@ -1,0 +1,22 @@
+services:
+    media:
+        class: Alpixel\Bundle\MediaBundle\Services\MediaManager
+        arguments:    [@doctrine, @kernel, %media.upload_folder%, %media.allowed_mimetypes%]
+
+    twig.extension.media:
+      class: Alpixel\Bundle\MediaBundle\Twig\Extension\MediaExtension
+      arguments: [@media]
+      tags:
+          - { name: twig.extension }
+
+    media.admin.admin_media:
+        class: Alpixel\Bundle\MediaBundle\Admin\AdminMedia
+        arguments: [~, Alpixel\Bundle\MediaBundle\Entity\Media, SonataAdminBundle:CRUD]
+        tags:
+            - {name: sonata.admin, show_in_dashboard: false, manager_type: orm, group: admin, label: Media}
+
+    media.type:
+        class: Alpixel\Bundle\MediaBundle\Form\MediaType
+        arguments: [@doctrine]
+        tags:
+            - { name: form.type, alias: media }

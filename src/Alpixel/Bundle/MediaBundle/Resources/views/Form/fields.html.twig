@@ -1,0 +1,158 @@
+{% extends 'form_div_layout.html.twig' %}
+
+{% block media_widget %}
+
+    {% set dropzoneId = "dropzone_"~form.vars.id %}
+
+
+    {% block media_javascripts %}
+        {% javascripts
+            '@MediaBundle/Resources/public/js/dropzone.js'
+        %}
+            <script type="text/javascript" src="{{ asset_url }}"></script>
+        {% endjavascripts %}
+        <script type="text/javascript">
+            (function($) {
+                $(function(){
+
+                    Dropzone.autoDiscover = false;
+
+                    var mediaDropzone = new Dropzone("div#{{dropzoneId}}", {
+                        url: "{{app.request.getSchemeAndHttpHost()}}{{ app.request.baseUrl }}/media/upload",
+                        maxFiles: 1,
+                        parallelUploads: 1,
+                        //autoQueue: false, // Make sure the files aren't queued until manually added
+                        maxFilesize: 10,
+                        clickable : 'p.add-dropzone',
+                        acceptedFiles: '.jpg, .png, .jpeg',
+                        addRemoveLinks : true,
+                        dictDefaultMessage : '',
+                        previewTemplate : $('#previewTemplateFileDrop').html(),
+                        thumbnailWidth : "200",
+                        thumbnailHeight : "135",
+                        dictInvalidFileType : 'Mauvais type de fichier',
+                        dictRemoveFile : '',
+                        dictCancelUpload : '',
+                        dictCancelUploadConfirmation : 'Confirmer',
+                        dictMaxFilesExceeded : 'Limite de photo atteinte.',
+                        dictFileTooBig : 'Le fichier est trop volumineux (max 10 Mo)',
+                        init : function(){
+
+                            /* DropZone */
+                            var $this = this;
+
+                            /* set MaxFiles to 1 by default */
+                            $this.options.maxFiles = 1;
+
+                            /* Load existing images for this okaz */
+                            var backup_folder = $('div#{{dropzoneId}}').parent().find('.dropzone-backup');
+
+                                if(backup_folder.length && backup_folder.has('img')) {
+                                    backup_folder.find('img').each(function(i,el){
+                                        var mockFile = { name: "Filename", size: 12345 };
+                                        var key = $(this).data('key');
+                                        Dropzone.forElement('div#{{dropzoneId}}').emit("addedfile", mockFile);
+                                        Dropzone.forElement('div#{{dropzoneId}}').emit("thumbnail", mockFile, $(this).attr('src'));
+
+                                        // Set $this.files.length right
+                                        $this.files.push(mockFile);
+
+                                        // set data-nb attr for remove link and remove associated hidden input */
+                                        mockFile.previewTemplate.setAttribute('data-rel',key);
+                                    });
+
+                                    $('.dz-remove').show();
+
+                                }
+
+
+
+                            /*
+                            if($('.dropzone-backup').has('img')) {
+
+                                $('.dropzone-backup').find('img').each(function(i,el){
+                                    var mockFile = { name: "Filename", size: 12345 };
+                                    var key = $(this).data('key');
+                                    Dropzone.forElement('div#{{dropzoneId}}').emit("addedfile", mockFile);
+                                    Dropzone.forElement('div#{{dropzoneId}}').emit("thumbnail", mockFile, $(this).attr('src'));
+
+                                    // Set $this.files.length right
+                                    $this.files.push(mockFile);
+
+                                    // set data-nb attr for remove link and remove associated hidden input
+                                    mockFile.previewTemplate.setAttribute('data-rel',key);
+                                });
+
+                                $('.dz-remove').show();
+                            }
+                            */
+                        }
+                    });
+
+                    mediaDropzone
+                    .on("success", function(file, response)
+                    {
+                        file.previewElement.setAttribute('data-rel',response[0].id);
+
+                        $('#{{form.vars.id}}').val(response[0].id);
+
+                        $('.dz-progress').hide();
+                        $('.dz-remove').show();
+                    });
+
+                    mediaDropzone
+                    .on("removedfile", function(file)
+                    {
+                        $('#{{form.vars.id}}').val(null);
+                    });
+
+                });
+            })(jQuery);
+        </script>
+    {% endblock %}
+
+    {% block media_stylesheets %}
+        {% stylesheets
+            '@MediaBundle/Resources/public/css/media_widget.css'
+        %}
+        <link href="{{ asset_url }}" type="text/css" rel="stylesheet" media="screen" />
+        {% endstylesheets %}
+    {% endblock %}
+
+
+    <div class="dropzone_widget">
+        <div id="previewTemplateFileDrop" style="display: none;">
+            <div class="dz-preview dz-file-preview">
+                <div class="dz-details">
+                    <img data-dz-thumbnail />
+                </div>
+                <div class="dz-progress"><span class="dz-upload" data-dz-uploadprogress></span></div>
+                <div class="dz-error-message"><span data-dz-errormessage></span></div>
+                <a href="#" data-dz-remove class="dz-remove" title="Supprimer cette photo"><i class="fa fa-times-circle"></i></a>
+            </div>
+        </div>
+
+
+        {# IF THIS OKAZ HAS IMAGES YET#}
+        <div class="dropzone-backup">
+            {% if form.vars.value is not empty %}
+                <img src="{{app.request.getSchemeAndHttpHost()}}{{ app.request.baseUrl }}/media/{{form.vars.value}}/admin" alt="" data-key="{{form.vars.value}}" />
+            {% endif %}
+        </div>
+
+
+        {# DROPZONE #}
+        <div id="dropzone" class="dropzone clearfix"></div>
+
+        <div class="center">
+            <p class="add-dropzone">
+                <i class="fa fa-plus-circle"></i> Ajouter une photo
+            </p>
+        </div>
+
+
+        <div id="{{dropzoneId}}"></div>
+        {{ block('form_widget') }}
+    </div>
+{% endblock %}
+
