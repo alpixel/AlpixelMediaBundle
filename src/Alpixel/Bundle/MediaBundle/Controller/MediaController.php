@@ -70,10 +70,10 @@ class MediaController extends Controller
               $fs->mkdir($uploadDir.$media->getFolder());
             }
 
-            $path     = 'upload/'.$media->getUri();
-            $image    = $dataManager->find($filter, $path);                    // find the image and determine its type
-            $response = $filterManager->applyFilter($image, $filter);         // run the filter
-            $data     = $response->getContent();                              // get the image from the response
+            $path         = 'upload/'.$media->getUri();
+            $image        = $dataManager->find($filter, $path);                    // find the image and determine its type
+            $responseData = $filterManager->applyFilter($image, $filter);         // run the filter
+            $data         = $responseData->getContent();                              // get the image from the response
             file_put_contents($uploadDir.$media->getUri(), $data);
           } else {
             $data = file_get_contents($src);
