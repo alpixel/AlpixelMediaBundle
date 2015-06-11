@@ -9,6 +9,7 @@ use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\EventDispatcher\ContainerAwareEventDispatcher;
 use Symfony\Component\EventDispatcher\Debug\TraceableEventDispatcher;
 use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
@@ -23,7 +24,7 @@ class MediaType extends AbstractType
     protected $registry;
     protected $dispatcher;
 
-    public function __construct(RegistryInterface $registry, EventDispatcher $dispatcher)
+    public function __construct(RegistryInterface $registry, EventDispatcherInterface $dispatcher)
     {
         $this->registry   = $registry;
         $this->dispatcher = $dispatcher;
