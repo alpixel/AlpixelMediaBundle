@@ -1,22 +1,32 @@
 <?php
 namespace Alpixel\Bundle\MediaBundle\Form;
 
-use Symfony\Component\Form\AbstractType;
-use Symfony\Bridge\Doctrine\RegistryInterface;
-use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use Symfony\Component\Form\FormView;
-use Symfony\Component\Form\FormInterface;
-use Symfony\Component\HttpKernel\Kernel;
 use Alpixel\Bundle\MediaBundle\DataTransformer\EntityToIdTransformer;
+use Alpixel\Bundle\MediaBundle\Entity\Media;
+use Alpixel\Bundle\MediaBundle\EventListener\MediaEvent;
+use Alpixel\Bundle\MediaBundle\EventListener\MediaListener;
+use Symfony\Bridge\Doctrine\RegistryInterface;
+use Symfony\Component\EventDispatcher\ContainerAwareEventDispatcher;
+use Symfony\Component\EventDispatcher\Debug\TraceableEventDispatcher;
+use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\FormView;
+use Symfony\Component\HttpKernel\Kernel;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class MediaType extends AbstractType
 {
     protected $registry;
+    protected $dispatcher;
 
-    public function __construct(RegistryInterface $registry)
+    public function __construct(RegistryInterface $registry, ContainerAwareEventDispatcher $dispatcher)
     {
-        $this->registry = $registry;
+        $this->registry   = $registry;
+        $this->dispatcher = $dispatcher;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -34,6 +44,14 @@ class MediaType extends AbstractType
             $options['query_builder'],
             $options['multiple']
         ));
+
+        $builder->addEventListener(FormEvents::POST_SUBMIT, array($this, 'onPostSubmit'));
+    }
+
+    public function onPostSubmit(FormEvent $event)
+    {
+        $mediaEvent = new MediaEvent($event);
+        $this->dispatcher->dispatch(MediaEvent::POST_SUBMIT, $mediaEvent);
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)

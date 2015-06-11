@@ -19,7 +19,7 @@ class MediaManager
     protected $uploadDir;
     protected $allowedMimetypes;
 
-    const SIZE_OF_OCTET = 1024;
+    const SIZE_OF_KIBIOCTET = 1024;
     const OCTET_IN_KO =  1;
     const OCTET_IN_MO =  2;
     const OCTET_IN_GO =  3;
@@ -200,7 +200,7 @@ class MediaManager
     public function convertOctetIn($size, $convert)
     {
         if($convert > 0) {
-            $size  = ($size / self::SIZE_OF_OCTET) * 1;
+            $size  = ($size / self::SIZE_OF_KIBIOCTET) * 1;
             return $this->convertOctetIn($size, $convert - 1);
         }
 
