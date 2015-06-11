@@ -17,6 +17,12 @@ services:
 
     media.type:
         class: Alpixel\Bundle\MediaBundle\Form\MediaType
-        arguments: [@doctrine]
+        arguments: [@doctrine, @event_dispatcher]
         tags:
             - { name: form.type, alias: media }
+
+    media.listener.media:
+        class: Alpixel\Bundle\MediaBundle\EventListener\MediaListener
+        arguments: [@doctrine]
+        tags:
+            - { name: kernel.event_listener, event: 'alpixel.media.post_submit', method: onPostSubmit }
