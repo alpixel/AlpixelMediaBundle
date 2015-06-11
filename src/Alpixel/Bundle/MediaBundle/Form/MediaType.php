@@ -23,7 +23,7 @@ class MediaType extends AbstractType
     protected $registry;
     protected $dispatcher;
 
-    public function __construct(RegistryInterface $registry, ContainerAwareEventDispatcher $dispatcher)
+    public function __construct(RegistryInterface $registry, EventDispatcher $dispatcher)
     {
         $this->registry   = $registry;
         $this->dispatcher = $dispatcher;
