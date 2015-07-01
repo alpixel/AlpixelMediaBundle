@@ -42,6 +42,33 @@ class MediaController extends Controller
     }
 
     /**
+     * @Route("/media/download/{secretKey}", name="media_download")
+     *
+     * @Method({"GET"})
+     */
+    public function downloadMediaAction(Media $media)
+    {
+        $response = new Response();
+        $response->setContent(file_get_contents($this->get('media')->getAbsolutePath($media)));
+        $response->headers->set('Content-Type', 'application/force-download');
+        $response->headers->set('Content-disposition', 'filename='.$media->getName());
+
+        return $response;
+    }
+
+    /**
+     * @Route("/media/delete/{secretKey}", name="media_delete")
+     *
+     * @Method({"POST"})
+     */
+    public function deleteMediaAction(Media $media)
+    {
+        $this->get('media')->delete($media);
+
+        return new Response();
+    }
+
+    /**
      * @Route("/media/{secretKey}/{filter}", name="media_show")
      *
      * @Method({"GET"})
@@ -94,30 +121,4 @@ class MediaController extends Controller
       return $response;
     }
 
-    /**
-     * @Route("/media/download/{secretKey}", name="media_download")
-     *
-     * @Method({"GET"})
-     */
-    public function downloadMediaAction(Media $media)
-    {
-        $response = new Response();
-        $response->setContent(file_get_contents($this->get('media')->getAbsolutePath($media)));
-        $response->headers->set('Content-Type', 'application/force-download');
-        $response->headers->set('Content-disposition', 'filename='.$media->getName());
-
-        return $response;
-    }
-
-    /**
-     * @Route("/media/delete/{secretKey}", name="media_delete")
-     *
-     * @Method({"POST"})
-     */
-    public function deleteMediaAction(Media $media)
-    {
-        $this->get('media')->delete($media);
-
-        return new Response();
-    }
 }
