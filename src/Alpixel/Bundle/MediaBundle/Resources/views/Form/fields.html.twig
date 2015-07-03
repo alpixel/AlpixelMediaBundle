@@ -193,8 +193,16 @@
 
         {# IF THIS OKAZ HAS IMAGES YET#}
         <div class="dropzone-backup">
-            {% if form.vars.value is not empty %}
-                <img src="{{app.request.getSchemeAndHttpHost()}}{{ app.request.baseUrl }}/media/{{form.vars.value}}/admin" alt="" data-key="{{form.vars.value}}" />
+            {% if form.vars.name is defined and form.vars.name == "picture" %}
+                {% if form.vars.value is not empty %}
+                    <img src="{{app.request.getSchemeAndHttpHost()}}{{ app.request.baseUrl }}/media/{{form.vars.value}}/admin" alt="" data-key="{{form.vars.value}}" />
+                {% endif %}
+            {% endif %}
+
+            {% if form.vars.name is defined and form.vars.name == "file" %}
+                {% if form.vars.value is not empty %}
+                    <img src="{{ asset(@MediaBundle/Resources/public/images/dropzone-file.png) }}" alt="" data-key="{{form.vars.value}}" />
+                {% endif %}
             {% endif %}
         </div>
 
