@@ -91,7 +91,7 @@
                                 var loader = $('<p />',{
                                     'id' : 'pictureLoader',
                                     'html' : 'Merci de patienter pendant l\'upload de votre fichier/image'
-                                }).insertAfter($('form .form-actions button')).hide();
+                                }).appendTo($('form .form-actions')).hide();
                             }
                         }
                     });
