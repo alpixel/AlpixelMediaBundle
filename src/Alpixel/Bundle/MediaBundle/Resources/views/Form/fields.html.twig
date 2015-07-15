@@ -200,7 +200,7 @@
 
             {% if form.vars.name is defined and form.vars.name == "file" %}
                 {% if form.vars.value is not empty %}
-                    <img src="{{app.request.getSchemeAndHttpHost()}}{{ app.request.basePath }}/bundles/media/images/dropzone-file.png" alt="Icône d'un pdf" />
+                    <img src="{{app.request.getSchemeAndHttpHost()}}{{ app.request.basePath }}/bundles/media/images/dropzone-file.png" alt="" />
                 {% endif %}
             {% endif %}
         </div>
