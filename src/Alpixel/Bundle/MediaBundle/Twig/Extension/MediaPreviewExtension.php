@@ -60,6 +60,21 @@ class MediaPreviewExtension extends \Twig_Extension
         return (array_key_exists($mime, $this->previewIcon)) ? $this->previewIcon[$mime] : $this->previewIcon['unknown'];
     }
 
+    public function generatePathFromSecretKey($secretKey)
+    {
+         if($secretKey == '')
+            return '';
+
+        $mimeType = $this->getMimeType($secretKey);
+
+        if(preg_match('/^image/', $mimeType) === 0) {
+            $icon = $this->getIcon($mimeType);
+            return $this->generatePath(true, $icon);
+        }
+
+        return $this->generatePath(false, $secretKey);
+    }
+
     protected function generatePath($isIcon, $str)
     {
         if($isIcon === true) {
