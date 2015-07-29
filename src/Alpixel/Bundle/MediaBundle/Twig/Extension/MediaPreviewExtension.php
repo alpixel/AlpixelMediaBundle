@@ -39,7 +39,7 @@ class MediaPreviewExtension extends \Twig_Extension
         }
 
         $link = $this->generatePath(false, $secretKey);
-        return '<img src="'.$link.'" data-key="'.$secretKey.'" />';
+        return '<img src="'.$link.'" alt="" data-key="'.$secretKey.'" />';
 
     }
 
@@ -57,6 +57,21 @@ class MediaPreviewExtension extends \Twig_Extension
         }
 
         return $this->requestStack->getSchemeAndHttpHost().$this->requestStack->getBaseUrl().'/media/'.$str.'/admin';
+    }
+
+    public function generatePathFromSecretKey($secretKey)
+    {
+         if($secretKey == '')
+            return '';
+
+        $mimeType = $this->getMimeType($secretKey);
+
+        if(preg_match('/^image/', $mimeType) === 0) {
+            $icon = $this->getIcon($mimeType);
+            return $this->generatePath(true, $icon);
+        }
+
+        return $this->generatePath(false, $secretKey);
     }
 
     protected function getMimeType($secretKey)

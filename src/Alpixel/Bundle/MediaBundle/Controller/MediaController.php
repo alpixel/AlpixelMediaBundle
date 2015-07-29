@@ -28,11 +28,13 @@ class MediaController extends Controller
             $lifetime = new \DateTime("+6 hours");
         }
 
+        $mediaPreview = $this->container->get('twig.extension.media_preview_extension');
         foreach ($this->get('request')->files as $file) {
             $media   = $this->get('media')->upload($file, $this->get('request')->get('folder'), $lifetime);
+            $path    = $mediaPreview->generatePathFromSecretKey($media->getSecretKey());
             $files[] = array(
                 'id'   => $media->getSecretKey(),
-                'path' => $this->get('media')->getSecretPath($media),
+                'path' => $path,
             );
         }
 

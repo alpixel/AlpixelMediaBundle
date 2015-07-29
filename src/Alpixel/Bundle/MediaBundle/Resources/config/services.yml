@@ -1,7 +1,7 @@
 parameters:
     preview_icons:
         pdf: 'dropzone-file.png'
-        unknown: 'default.png'
+        unknown: 'unknown.png'
 
 services:
     media:
