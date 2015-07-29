@@ -84,6 +84,21 @@ class MediaPreviewExtension extends \Twig_Extension
         return $this->requestStack->getSchemeAndHttpHost().$this->requestStack->getBaseUrl().'/media/'.$str.'/admin';
     }
 
+    public function generatePathFromSecretKey($secretKey)
+    {
+         if($secretKey == '')
+            return '';
+
+        $mimeType = $this->getMimeType($secretKey);
+
+        if(preg_match('/^image/', $mimeType) === 0) {
+            $icon = $this->getIcon($mimeType);
+            return $this->generatePath(true, $icon);
+        }
+
+        return $this->generatePath(false, $secretKey);
+    }
+
     protected function getMimeType($secretKey)
     {
         $mediaObject = $this->entityManager->getRepository('MediaBundle:Media')->findOneBySecretKey($secretKey);
