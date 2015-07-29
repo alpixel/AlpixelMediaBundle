@@ -1,0 +1,529 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"if",
+				"if	Twig : If"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "src/Alpixel/Bundle/MediaBundle/Resources/views/Form/fields.html.twig",
+			"settings":
+			{
+				"buffer_size": 9344,
+				"line_ending": "Unix"
+			}
+		}
+	],
+	"build_system": "",
+	"build_system_choices":
+	[
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 201.0,
+		"last_filter": "tw",
+		"selected_items":
+		[
+			[
+				"tw",
+				"Set Syntax: HTML (Twig)"
+			],
+			[
+				"install",
+				"Package Control: Install Package"
+			],
+			[
+				"inst",
+				"Package Control: Install Package"
+			],
+			[
+				"insta",
+				"Package Control: Install Package"
+			],
+			[
+				"instal",
+				"Package Control: Install Package"
+			]
+		],
+		"width": 593.0
+	},
+	"console":
+	{
+		"height": 139.0,
+		"history":
+		[
+			"import urllib.request,os,hashlib; h = 'eb2297e1a458f27d836c04bb0cbaf282' + 'd0e7a3098092775ccb37ca9d6b2e4b7d'; pf = 'Package Control.sublime-package'; ipp = sublime.installed_packages_path(); urllib.request.install_opener( urllib.request.build_opener( urllib.request.ProxyHandler()) ); by = urllib.request.urlopen( 'http://packagecontrol.io/' + pf.replace(' ', '%20')).read(); dh = hashlib.sha256(by).hexdigest(); print('Error validating download (got %s instead of %s), please try manual install' % (dh, h)) if dh != h else open(os.path.join( ipp, pf), 'wb' ).write(by)"
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"expanded_folders":
+	[
+		"/run/user/1000/gvfs/smb-share:server=soad,share=web/alexis/workspace/mediabundle",
+		"/run/user/1000/gvfs/smb-share:server=soad,share=web/alexis/workspace/mediabundle/src",
+		"/run/user/1000/gvfs/smb-share:server=soad,share=web/alexis/workspace/mediabundle/src/Alpixel",
+		"/run/user/1000/gvfs/smb-share:server=soad,share=web/alexis/workspace/mediabundle/src/Alpixel/Bundle",
+		"/run/user/1000/gvfs/smb-share:server=soad,share=web/alexis/workspace/mediabundle/src/Alpixel/Bundle/MediaBundle"
+	],
+	"file_history":
+	[
+		"/run/user/1000/gvfs/smb-share:server=soad,share=web/alexis/workspace/www.savoie-hexapole.com/src/Hexapole/MenuBundle/Admin/MenuItemAdmin.php",
+		"/run/user/1000/gvfs/smb-share:server=soad,share=web/alexis/workspace/www.savoie-hexapole.com/src/Hexapole/CompanyBundle/Controller/FrontCompanyAreaController.php",
+		"/run/user/1000/gvfs/smb-share:server=soad,share=web/alexis/workspace/www.savoie-hexapole.com/src/Hexapole/CompanyBundle/Controller/FrontCompanyController.php",
+		"/run/user/1000/gvfs/smb-share:server=soad,share=web/alexis/workspace/www.savoie-hexapole.com/vendor/alpixel/mediabundle/src/Alpixel/Bundle/MediaBundle/Entity/Media.php",
+		"/run/user/1000/gvfs/smb-share:server=soad,share=web/alexis/workspace/www.savoie-hexapole.com/src/Hexapole/CompanyBundle/Resources/views/front/pages/front_company_detail.html.twig",
+		"/run/user/1000/gvfs/smb-share:server=soad,share=web/alexis/workspace/www.savoie-hexapole.com/src/Hexapole/CompanyBundle/Resources/views/front/pages/front_company_edit.html.twig",
+		"/home/alexis/.config/sublime-text-3/Packages/User/Preferences.sublime-settings",
+		"/run/user/1000/gvfs/smb-share:server=soad,share=web/alexis/workspace/www.savoie-hexapole.com/src/Hexapole/BuildingActivityBundle/Form/Type/AdPropertyType.php",
+		"/run/user/1000/gvfs/smb-share:server=soad,share=web/alexis/workspace/www.savoie-hexapole.com/src/Hexapole/BuildingActivityBundle/Entity/Repository/AdPropertyRepository.php",
+		"/run/user/1000/gvfs/smb-share:server=soad,share=web/alexis/workspace/www.savoie-hexapole.com/src/Hexapole/BuildingActivityBundle/Controller/FrontAdPropertyController.php",
+		"/run/user/1000/gvfs/smb-share:server=soad,share=web/alexis/workspace/www.savoie-hexapole.com/src/Hexapole/BuildingActivityBundle/Resources/views/front/pages/front_ad_property_list.html.twig",
+		"/run/user/1000/gvfs/smb-share:server=soad,share=web/alexis/workspace/www.savoie-hexapole.com/src/Hexapole/BuildingActivityBundle/Entity/AdProperty.php",
+		"/run/user/1000/gvfs/smb-share:server=soad,share=web/alexis/workspace/www.savoie-hexapole.com/app/config/config.yml",
+		"/run/user/1000/gvfs/smb-share:server=soad,share=web/alexis/workspace/www.savoie-hexapole.com/src/Hexapole/CompanyBundle/Admin/AdminCompany.php",
+		"/run/user/1000/gvfs/smb-share:server=soad,share=web/alexis/workspace/www.savoie-hexapole.com/src/Hexapole/MeetingBundle/Controller/FrontRoomBookingController.php",
+		"/run/user/1000/gvfs/smb-share:server=soad,share=web/alexis/workspace/www.savoie-hexapole.com/composer.json",
+		"/run/user/1000/gvfs/smb-share:server=soad,share=web/alexis/workspace/www.savoie-hexapole.com/app/config/security.yml",
+		"/run/user/1000/gvfs/smb-share:server=soad,share=web/alexis/workspace/www.savoie-hexapole.com/src/Hexapole/CompanyBundle/Entity/Company.php",
+		"/run/user/1000/gvfs/smb-share:server=soad,share=web/alexis/workspace/www.savoie-hexapole.com/src/Hexapole/AccountBundle/Entity/User.php",
+		"/run/user/1000/gvfs/smb-share:server=soad,share=web/alexis/workspace/www.savoie-hexapole.com/src/Hexapole/WebBundle/Resources/views/front/blocks/header.html.twig",
+		"/run/user/1000/gvfs/smb-share:server=soad,share=web/alexis/workspace/www.savoie-hexapole.com/vendor/alpixel/seobundle/src/Alpixel/Bundle/SEOBundle/Entity/SluggableInterface.php",
+		"/run/user/1000/gvfs/smb-share:server=soad,share=web/alexis/workspace/www.savoie-hexapole.com/app/Resources/views/front/pages/base.html.twig",
+		"/run/user/1000/gvfs/smb-share:server=soad,share=web/alexis/workspace/www.savoie-hexapole.com/vendor/alpixel/seobundle/src/Alpixel/Bundle/SEOBundle/SEOBundle.php",
+		"/run/user/1000/gvfs/smb-share:server=soad,share=web/alexis/workspace/www.savoie-hexapole.com/vendor/alpixel/seobundle/src/Alpixel/Bundle/SEOBundle/Entity/SluggableTrait.php",
+		"/run/user/1000/gvfs/smb-share:server=soad,share=web/alexis/workspace/www.savoie-hexapole.com/vendor/kzykhys/twig-extensions/doc/filters/md5.md",
+		"/run/user/1000/gvfs/smb-share:server=soad,share=web/alexis/workspace/www.savoie-hexapole.com/vendor/alpixel/seobundle/src/Alpixel/Bundle/SEOBundle/Resources/views/admin/pages/list.html.twig",
+		"/run/user/1000/gvfs/smb-share:server=soad,share=web/alexis/workspace/www.savoie-hexapole.com/vendor/kzykhys/twig-extensions/doc/README.md",
+		"/run/user/1000/gvfs/smb-share:server=soad,share=web/alexis/workspace/www.savoie-hexapole.com/vendor/kzykhys/twig-extensions/README.md",
+		"/run/user/1000/gvfs/smb-share:server=soad,share=web/alexis/workspace/www.savoie-hexapole.com/src/Hexapole/CompanyBundle/Controller/FrontResumeController.php",
+		"/run/user/1000/gvfs/smb-share:server=soad,share=web/alexis/workspace/www.savoie-hexapole.com/src/Hexapole/JobBundle/Controller/FrontJobOfferController.php",
+		"/run/user/1000/gvfs/smb-share:server=soad,share=web/alexis/workspace/www.savoie-hexapole.com/src/Hexapole/SliderBundle/Admin/AdminSlider.php",
+		"/run/user/1000/gvfs/smb-share:server=soad,share=web/alexis/workspace/www.savoie-hexapole.com/src/Hexapole/SliderBundle/Admin/AdminSlide.php",
+		"/run/user/1000/gvfs/smb-share:server=soad,share=web/alexis/workspace/www.savoie-hexapole.com/app/config/admin.yml",
+		"/run/user/1000/gvfs/smb-share:server=soad,share=web/alexis/workspace/www.savoie-hexapole.com/src/Hexapole/SliderBundle/Entity/Slide.php",
+		"/run/user/1000/gvfs/smb-share:server=soad,share=web/alexis/workspace/www.savoie-hexapole.com/src/Hexapole/SliderBundle/Entity/Slider.php",
+		"/run/user/1000/gvfs/smb-share:server=soad,share=web/alexis/workspace/www.savoie-hexapole.com/src/Hexapole/JobBundle/Entity/JobOffer.php",
+		"/run/user/1000/gvfs/smb-share:server=soad,share=web/alexis/workspace/www.savoie-hexapole.com/src/Hexapole/JobBundle/Resources/views/front/pages/front_job_offer_show.html.twig",
+		"/run/user/1000/gvfs/smb-share:server=soad,share=web/alexis/workspace/www.savoie-hexapole.com/src/Hexapole/CompanyBundle/Resources/views/front/pages/front_company_list.html.twig",
+		"/run/user/1000/gvfs/smb-share:server=soad,share=web/alexis/workspace/www.savoie-hexapole.com/vendor/alpixel/mediabundle/src/Alpixel/Bundle/MediaBundle/Controller/MediaController.php",
+		"/run/user/1000/gvfs/smb-share:server=soad,share=web/alexis/workspace/www.savoie-hexapole.com/vendor/symfony/symfony/src/Symfony/Component/Security/Http/RememberMe/ResponseListener.php",
+		"/run/user/1000/gvfs/smb-share:server=soad,share=web/alexis/workspace/www.savoie-hexapole.com/src/Hexapole/CompanyBundle/Resources/views/front/pages/front_resume_create.html.twig",
+		"/run/user/1000/gvfs/smb-share:server=soad,share=web/alexis/workspace/www.savoie-hexapole.com/src/Hexapole/CMSBundle/HexapoleCMSBundle.php",
+		"/run/user/1000/gvfs/smb-share:server=soad,share=web/alexis/workspace/www.savoie-hexapole.com/app/Resources/views/front/blocks/sub-menu.html.twig",
+		"/run/user/1000/gvfs/smb-share:server=soad,share=web/alexis/workspace/www.savoie-hexapole.com/src/Hexapole/BuildingActivityBundle/Entity/BuildingActivity.php",
+		"/run/user/1000/gvfs/smb-share:server=soad,share=web/alexis/workspace/www.savoie-hexapole.com/src/Hexapole/MeetingBundle/Controller/FrontRoomController.php",
+		"/run/user/1000/gvfs/smb-share:server=soad,share=web/alexis/workspace/www.savoie-hexapole.com/src/Hexapole/CMSBundle/Controller/FrontOutdoorController.php",
+		"/run/user/1000/gvfs/smb-share:server=soad,share=web/alexis/workspace/www.savoie-hexapole.com/src/Hexapole/CompanyBundle/Resources/views/front/blocks/company_area_header.html.twig"
+	],
+	"find":
+	{
+		"height": 35.0
+	},
+	"find_in_files":
+	{
+		"height": 0.0,
+		"where_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"user",
+			"twig",
+			"kzykhys",
+			"\"kzykhys/twig-extensions",
+			"\"kzykhys/twig-extensions\": \"dev-master\"",
+			"machineName"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 0,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "src/Alpixel/Bundle/MediaBundle/Resources/views/Form/fields.html.twig",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 9344,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								8949,
+								8949
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Twig/Syntaxes/HTML (Twig).tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 3348.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 26.0
+	},
+	"input":
+	{
+		"height": 0.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.exec":
+	{
+		"height": 118.0
+	},
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"pinned_build_system": "",
+	"project": "media.sublime-project",
+	"replace":
+	{
+		"height": 48.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"field",
+				"src/Alpixel/Bundle/MediaBundle/Resources/views/Form/fields.html.twig"
+			],
+			[
+				"adminmenuite",
+				"src/Hexapole/MenuBundle/Admin/MenuItemAdmin.php"
+			],
+			[
+				"media",
+				"vendor/alpixel/mediabundle/src/Alpixel/Bundle/MediaBundle/Entity/Media.php"
+			],
+			[
+				"front_company_e",
+				"src/Hexapole/CompanyBundle/Resources/views/front/pages/front_company_edit.html.twig"
+			],
+			[
+				"front_compa",
+				"src/Hexapole/CompanyBundle/Resources/views/front/pages/front_company_detail.html.twig"
+			],
+			[
+				"frontarea",
+				"src/Hexapole/CompanyBundle/Controller/FrontCompanyAreaController.php"
+			],
+			[
+				"frontcompany",
+				"src/Hexapole/CompanyBundle/Controller/FrontCompanyController.php"
+			],
+			[
+				"adprop",
+				"src/Hexapole/BuildingActivityBundle/Entity/Repository/AdPropertyRepository.php"
+			],
+			[
+				"frontad",
+				"src/Hexapole/BuildingActivityBundle/Controller/FrontAdPropertyController.php"
+			],
+			[
+				"adpr",
+				"src/Hexapole/BuildingActivityBundle/Form/Type/AdPropertyType.php"
+			],
+			[
+				"front_proper",
+				"src/Hexapole/BuildingActivityBundle/Resources/views/front/pages/front_ad_property_list.html.twig"
+			],
+			[
+				"adpro",
+				"src/Hexapole/BuildingActivityBundle/Entity/AdProperty.php"
+			],
+			[
+				"composer",
+				"composer.json"
+			],
+			[
+				"conig",
+				"app/config/config.yml"
+			],
+			[
+				"frontcom",
+				"src/Hexapole/CompanyBundle/Controller/FrontCompanyAreaController.php"
+			],
+			[
+				"user",
+				"src/Hexapole/AccountBundle/Entity/User.php"
+			],
+			[
+				"company",
+				"src/Hexapole/CompanyBundle/Entity/Company.php"
+			],
+			[
+				"header",
+				"src/Hexapole/WebBundle/Resources/views/front/blocks/header.html.twig"
+			],
+			[
+				"base",
+				"app/Resources/views/front/pages/base.html.twig"
+			],
+			[
+				"front_company_edit",
+				"src/Hexapole/CompanyBundle/Resources/views/front/pages/front_company_edit.html.twig"
+			],
+			[
+				"slugga",
+				"vendor/alpixel/seobundle/src/Alpixel/Bundle/SEOBundle/Entity/SluggableInterface.php"
+			],
+			[
+				"menuitem",
+				"src/Hexapole/MenuBundle/Admin/MenuItemAdmin.php"
+			],
+			[
+				"secur",
+				"app/config/security.yml"
+			],
+			[
+				"meetingcontro",
+				"src/Hexapole/MeetingBundle/Controller/FrontRoomBookingController.php"
+			],
+			[
+				"compa",
+				"src/Hexapole/CompanyBundle/Entity/Company.php"
+			],
+			[
+				"admincom",
+				"src/Hexapole/CompanyBundle/Admin/AdminCompany.php"
+			],
+			[
+				"config",
+				"app/config/config.yml"
+			],
+			[
+				"list.html",
+				"vendor/alpixel/seobundle/src/Alpixel/Bundle/SEOBundle/Resources/views/admin/pages/list.html.twig"
+			],
+			[
+				"sluggableinte",
+				"vendor/alpixel/seobundle/src/Alpixel/Bundle/SEOBundle/Entity/SluggableInterface.php"
+			],
+			[
+				"sluggain",
+				"vendor/alpixel/seobundle/src/Alpixel/Bundle/SEOBundle/Entity/SluggableInterface.php"
+			],
+			[
+				"md5",
+				"vendor/kzykhys/twig-extensions/doc/filters/md5.md"
+			],
+			[
+				"alpixelseobundle",
+				"vendor/alpixel/seobundle/src/Alpixel/Bundle/SEOBundle/SEOBundle.php"
+			],
+			[
+				"slider",
+				"src/Hexapole/SliderBundle/Entity/Slider.php"
+			],
+			[
+				"slide",
+				"src/Hexapole/SliderBundle/Entity/Slide.php"
+			],
+			[
+				"admin",
+				"app/config/admin.yml"
+			],
+			[
+				"adminslider",
+				"src/Hexapole/SliderBundle/Admin/AdminSlider.php"
+			],
+			[
+				"front_ad",
+				"src/Hexapole/BuildingActivityBundle/Resources/views/front/pages/front_ad_property_list.html.twig"
+			],
+			[
+				"fronlist",
+				"src/Hexapole/CompanyBundle/Resources/views/front/pages/front_company_list.html.twig"
+			],
+			[
+				"hexapole/jobbundle/entity/joboffer",
+				"src/Hexapole/JobBundle/Entity/JobOffer.php"
+			],
+			[
+				"frontjobo",
+				"src/Hexapole/JobBundle/Controller/FrontJobOfferController.php"
+			],
+			[
+				"symfony/component/security/http/rememberme/responselistener",
+				"vendor/symfony/symfony/src/Symfony/Component/Security/Http/RememberMe/ResponseListener.php"
+			],
+			[
+				"mediacont",
+				"vendor/alpixel/mediabundle/src/Alpixel/Bundle/MediaBundle/Controller/MediaController.php"
+			],
+			[
+				"front_job",
+				"src/Hexapole/JobBundle/Resources/views/front/pages/front_job_offer_show.html.twig"
+			],
+			[
+				"frontjob",
+				"src/Hexapole/JobBundle/Controller/FrontJobOfferController.php"
+			],
+			[
+				"front_resume_create",
+				"src/Hexapole/CompanyBundle/Resources/views/front/pages/front_resume_create.html.twig"
+			],
+			[
+				"frontres",
+				"src/Hexapole/CompanyBundle/Controller/FrontResumeController.php"
+			],
+			[
+				"adprope",
+				"src/Hexapole/BuildingActivityBundle/Entity/AdProperty.php"
+			],
+			[
+				"adproper",
+				"src/Hexapole/BuildingActivityBundle/Form/Type/AdPropertyType.php"
+			],
+			[
+				"header.htm",
+				"src/Hexapole/WebBundle/Resources/views/front/blocks/header.html.twig"
+			],
+			[
+				"companyheader",
+				"src/Hexapole/CompanyBundle/Resources/views/front/blocks/company_area_header.html.twig"
+			],
+			[
+				"adpropertycontro",
+				"src/Hexapole/BuildingActivityBundle/Controller/FrontAdPropertyController.php"
+			],
+			[
+				"cmsbun",
+				"src/Hexapole/CMSBundle/HexapoleCMSBundle.php"
+			],
+			[
+				"frontroo",
+				"src/Hexapole/MeetingBundle/Controller/FrontRoomController.php"
+			],
+			[
+				"actvit",
+				"src/Hexapole/BuildingActivityBundle/Entity/BuildingActivity.php"
+			]
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 500.0,
+		"last_filter": "savoi",
+		"selected_items":
+		[
+			[
+				"savoi",
+				"/run/user/1000/gvfs/smb-share:server=soad,share=web/alexis/workspace/www.savoie-hexapole.com/savoie_hexapole.sublime-project"
+			],
+			[
+				"",
+				"/run/user/1000/gvfs/smb-share:server=soad,share=web/alexis/workspace/www.savoie-hexapole.com/savoie_hexapole.sublime-project"
+			],
+			[
+				"savoie",
+				"/run/user/1000/gvfs/smb-share:server=soad,share=web/alexis/workspace/www.savoie-hexapole.com/savoie_hexapole.sublime-project"
+			],
+			[
+				"seas",
+				"/run/user/1000/gvfs/smb-share:server=soad,share=web/alexis/workspace/www.seasonpros.com/seasonspros.sublime-project"
+			],
+			[
+				"oka",
+				"/run/user/1000/gvfs/smb-share:server=soad,share=web/alexis/workspace/www.okazado.com/okazado.sublime-project"
+			]
+		],
+		"width": 380.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 374.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}
