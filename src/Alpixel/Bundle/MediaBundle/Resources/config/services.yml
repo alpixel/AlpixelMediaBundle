@@ -1,3 +1,8 @@
+parameters:
+    preview_icons:
+        pdf: 'dropzone-file.png'
+        unknown: 'default.png'
+
 services:
     media:
         class: Alpixel\Bundle\MediaBundle\Services\MediaManager
@@ -8,6 +13,12 @@ services:
       arguments: [@media]
       tags:
           - { name: twig.extension }
+
+    twig.extension.media_preview_extension:
+        class: Alpixel\Bundle\MediaBundle\Twig\Extension\MediaPreviewExtension
+        arguments: [@request_stack, @doctrine.orm.default_entity_manager, %preview_icons%]
+        tags:
+            - { name: twig.extension }
 
     media.admin.admin_media:
         class: Alpixel\Bundle\MediaBundle\Admin\AdminMedia
