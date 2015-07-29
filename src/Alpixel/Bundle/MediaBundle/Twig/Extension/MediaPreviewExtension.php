@@ -21,26 +21,36 @@ class MediaPreviewExtension extends \Twig_Extension
     public function getFilters()
     {
         return array(
-            'previewIcon' => new \Twig_Filter_Method($this, 'previewIconFilter', array('is_safe' => array('html')))
+            'previewIcon' => new \Twig_Filter_Method($this, 'previewIconFilter', array(
+                'is_safe' => array('html'),
+                'needs_environment' => true,
+                )
+            )
         );
     }
 
-    public function previewIconFilter($secretKey = '')
+    public function previewIconFilter(\Twig_Environment $twig, $secretKey = '')
     {
         if($secretKey == '')
             return '';
 
         $mimeType = $this->getMimeType($secretKey);
+        $icon     = '';
+        $link     = '';
 
         if(preg_match('/^image/', $mimeType) === 0) {
             $icon = $this->getIcon($mimeType);
             $link = $this->generatePath(true, $icon);
-            return '<img src="'.$link.'" /><div id="preview-template" style="display: none;"></div>';
+        }
+        else {
+            $link = $this->generatePath(false, $secretKey);
         }
 
-        $link = $this->generatePath(false, $secretKey);
-        return '<img src="'.$link.'" alt="" data-key="'.$secretKey.'" />';
-
+        return $twig->render('MediaBundle:Form:blocks/show_icon.html.twig', array(
+            'link'      => $link,
+            'icon'      => $icon,
+            'secretKey' => $secretKey,
+        ));
     }
 
     protected function getIcon($mimeType)
@@ -57,21 +67,6 @@ class MediaPreviewExtension extends \Twig_Extension
         }
 
         return $this->requestStack->getSchemeAndHttpHost().$this->requestStack->getBaseUrl().'/media/'.$str.'/admin';
-    }
-
-    public function generatePathFromSecretKey($secretKey)
-    {
-         if($secretKey == '')
-            return '';
-
-        $mimeType = $this->getMimeType($secretKey);
-
-        if(preg_match('/^image/', $mimeType) === 0) {
-            $icon = $this->getIcon($mimeType);
-            return $this->generatePath(true, $icon);
-        }
-
-        return $this->generatePath(false, $secretKey);
     }
 
     protected function getMimeType($secretKey)

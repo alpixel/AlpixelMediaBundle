@@ -1,0 +1,5 @@
+{% if icon is empty %}
+        <img src="{{link}}" data-key="{{secretKey}}" />
+{% else %}
+        <img src="{{link}}" /><div id="preview-template" style="display: none;"></div>
+{% endif %}
