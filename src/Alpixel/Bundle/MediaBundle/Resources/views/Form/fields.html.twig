@@ -108,6 +108,12 @@
 
                         /* Show clickable button only if file length < to the maxFile limit */
                         showHideDropzoneButton(mediaDropzone.files.length,mediaDropzone.options.maxFiles);
+						
+						/* Show uploaded img : pdf or img */
+                        if(response[0].path) {
+                            var path = response[0].path;
+                            $('div#{{dropzoneId}}').find('.dz-details img').attr('src',path);
+                        }
                     });
 
                     mediaDropzone
