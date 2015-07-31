@@ -3,14 +3,12 @@
 namespace Alpixel\Bundle\MediaBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use JMS\Serializer\Annotation as Serializer;
 
 /**
  * Media.
  *
  * @ORM\Table(name="media")
  * @ORM\Entity(repositoryClass="Alpixel\Bundle\MediaBundle\Repository\MediaRepository")
- * @Serializer\ExclusionPolicy("all")
  */
 class Media
 {
@@ -40,7 +38,6 @@ class Media
     /**
      * @var string
      *
-     * @Serializer\Expose
      * @ORM\Column(name="secret_key", type="string", length=64, nullable=false, unique=true)
      */
     protected $secretKey;
