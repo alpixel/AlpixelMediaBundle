@@ -1,5 +1,3 @@
-
-
 (function($) {
     $(function(){
 
@@ -18,9 +16,9 @@
             Dropzone.autoDiscover = false;
 
             var uploadedFiles = [];
-            var dropzoneId = $(this).attr('data-id');
-            var dropzoneUri = $(this).attr('data-url');
-            var uploadMultiple = ($(this).attr('data-multiple').length > 0);
+            var dropzoneId      = $(this).attr('data-id');
+            var dropzoneUri     = $(this).attr('data-url');
+            var uploadMultiple  = ($(this).attr('data-multiple').length > 0);
 
             if(uploadMultiple)
                 var maxFile = $(this).attr('data-max-file');
@@ -102,14 +100,13 @@
             .on("success", function(file, response)
             {
                 file.previewElement.setAttribute('data-rel',response[0].id);
+                $(file.previewElement).find('.dz-progress').hide();
+                $(file.previewElement).find('.dz-remove').show();
 
-                $(response).each(function(i, el){
-                    uploadedFiles.push(el.id);
-                });
+                file['data'] = response[0]
+                uploadedFiles.push(response[0].id);
+
                 refreshDropzoneValue(resultInput, uploadedFiles);
-
-                $('.dz-progress').hide();
-                $('.dz-remove').show();
 
                 /* Show clickable button only if file length < to the maxFile limit */
                 showHideDropzoneButton(mediaDropzone.files.length,mediaDropzone.options.maxFiles);
@@ -124,11 +121,12 @@
             mediaDropzone
             .on("removedfile", function(file)
             {
+                var newData = [];
                 $(uploadedFiles).each(function(i, el) {
-                    console.log(file);
-                    if(el == file.id)
-                        delete uploadedFiles[i];
+                    if(el != file.data.id)
+                        newData.push(uploadedFiles[i]);
                 });
+                uploadedFiles = newData;
                 refreshDropzoneValue(resultInput, uploadedFiles);
             });
 

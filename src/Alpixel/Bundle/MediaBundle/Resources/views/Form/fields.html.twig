@@ -22,11 +22,13 @@
         </div>
 
         {# DROPZONE #}
+        {% block dropzone_element %}
         <div class="center">
             <p class="add-dropzone add-{{dropzoneId}}">
                 <i class="fa fa-plus-circle"></i> {{helper}}
             </p>
         </div>
+        {% endblock %}
 
 
         <div id="{{dropzoneId}}">

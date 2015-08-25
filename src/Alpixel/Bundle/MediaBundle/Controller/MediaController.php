@@ -19,7 +19,7 @@ class MediaController extends Controller
      */
     public function uploadAction()
     {
-        $files    = array();
+        $returnData    = array();
 
         if ($this->get('request')->get('lifetime') !== null) {
             $lifetime = new \DateTime($this->get('request')->get('lifetime'));
@@ -30,20 +30,21 @@ class MediaController extends Controller
         }
 
         $mediaPreview = $this->container->get('twig.extension.media_preview_extension');
-        foreach ($this->get('request')->files as $file) {
-            if(!is_array($file))
-              $file = array($file);
-            foreach($file as $realFile) {
-              $media   = $this->get('media')->upload($realFile, $this->get('request')->get('folder'), $lifetime);
+        foreach ($this->get('request')->files as $files) {
+            if(!is_array($files))
+              $files = array($files);
+            foreach($files as $file) {
+              $media   = $this->get('media')->upload($file, $this->get('request')->get('folder'), $lifetime);
               $path    = $mediaPreview->generatePathFromSecretKey($media->getSecretKey());
-              $files[] = array(
+              $returnData[] = array(
                   'id'   => $media->getSecretKey(),
                   'path' => $path,
+                  'name' => $media->getName(),
               );
             }
         }
 
-        return new JsonResponse($files);
+        return new JsonResponse($returnData);
     }
 
     /**
