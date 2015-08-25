@@ -4,6 +4,7 @@
     {% set dropzoneId =  form.vars.id %}
 
     <div class="dropzone_widget" data-id="{{dropzoneId}}" data-multiple="{{multiple}}" data-max-file="{{max_nb_file}}" data-url="{{app.request.getSchemeAndHttpHost()}}{{ app.request.baseUrl }}/media/upload">
+        {% block dropzone_preview_template %}
         <div class="previewTemplateFileDrop" style="display: none;">
             <div class="dz-preview dz-file-preview">
                 <div class="dz-details">
@@ -14,6 +15,7 @@
                 <a href="#" data-dz-remove class="dz-remove" title="Supprimer cette photo"><i class="fa fa-times-circle"></i></a>
             </div>
         </div>
+        {% endblock %}
 
         <div class="dropzone-backup">
             {% if form.vars.value is defined %}
