@@ -7,6 +7,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
 class MediaController extends Controller
@@ -38,9 +39,7 @@ class MediaController extends Controller
             );
         }
 
-        $serializer = $this->get('jms_serializer');
-
-        return new Response($serializer->serialize($files, 'json'), Response::HTTP_OK, array('Content-Type' => 'application/json'));
+        return new JsonResponse($files);
     }
 
     /**
