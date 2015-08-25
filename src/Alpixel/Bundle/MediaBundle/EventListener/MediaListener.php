@@ -16,20 +16,11 @@ class MediaListener
 
     public function onPostSubmit(MediaEvent $event)
     {
-        $event      = $event->getData();
-        $formParent = $event->getForm()->getParent();
-        $data       = $event->getData();
+        $media      = $event->getMedia();
 
-        if($formParent !== null && $data !== null)
-         {
-            $manager    = $this->registry->getManager();
-            $repository = $manager->getRepository('Alpixel\Bundle\MediaBundle\Entity\Media');
-            $media      = $repository->findOneBySecretKey($data);
-
-            if($media !== null) {
-                $media->setLifetime(null);
-                $event->setData($media);
-            }
+        if($media !== null) {
+            $media->setLifetime(null);
+            $this->registry->getManager()->persist($media);
         }
     }
 }

@@ -31,12 +31,16 @@ class MediaController extends Controller
 
         $mediaPreview = $this->container->get('twig.extension.media_preview_extension');
         foreach ($this->get('request')->files as $file) {
-            $media   = $this->get('media')->upload($file, $this->get('request')->get('folder'), $lifetime);
-            $path    = $mediaPreview->generatePathFromSecretKey($media->getSecretKey());
-            $files[] = array(
-                'id'   => $media->getSecretKey(),
-                'path' => $path,
-            );
+            if(!is_array($file))
+              $file = array($file);
+            foreach($file as $realFile) {
+              $media   = $this->get('media')->upload($realFile, $this->get('request')->get('folder'), $lifetime);
+              $path    = $mediaPreview->generatePathFromSecretKey($media->getSecretKey());
+              $files[] = array(
+                  'id'   => $media->getSecretKey(),
+                  'path' => $path,
+              );
+            }
         }
 
         return new JsonResponse($files);

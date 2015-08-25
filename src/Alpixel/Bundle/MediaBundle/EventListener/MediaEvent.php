@@ -2,22 +2,29 @@
 
 namespace Alpixel\Bundle\MediaBundle\EventListener;
 
+use Alpixel\Bundle\MediaBundle\Entity\Media;
 use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\Form\FormEvent;
 
 class MediaEvent extends Event
 {
-    protected $form;
+    protected $media;
 
     const POST_SUBMIT = 'alpixel.media.post_submit';
 
-    public function __construct(FormEvent $form)
+    public function __construct(Media $media)
     {
-        $this->form = $form;
+        $this->media = $media;
     }
 
-    public function getData()
+
+    /**
+     * Gets the value of media.
+     *
+     * @return mixed
+     */
+    public function getMedia()
     {
-        return $this->form;
+        return $this->media;
     }
 }

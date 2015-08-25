@@ -1,5 +1,4 @@
-var baseMediaUri;
-var dropzoneAreas = [];
+
 
 (function($) {
     $(function(){
@@ -11,19 +10,33 @@ var dropzoneAreas = [];
                 $('div#'+id).parent().find('.dz-clickable').hide();
         }
 
+        function refreshDropzoneValue(resultInput, uploadedFiles) {
+            resultInput.val(uploadedFiles.join('#&#'));
+        }
+
         $('.dropzone_widget').each(function(i, el) {
             Dropzone.autoDiscover = false;
 
+            var uploadedFiles = [];
             var dropzoneId = $(this).attr('data-id');
             var dropzoneUri = $(this).attr('data-url');
+            var uploadMultiple = ($(this).attr('data-multiple').length > 0);
+
+            if(uploadMultiple)
+                var maxFile = $(this).attr('data-max-file');
+            else
+                var maxFile = 1;
+
+            var resultInput = $('#'+dropzoneId+' input');
+
             var mediaDropzone = new Dropzone("div#"+dropzoneId, {
                 url: dropzoneUri,
-                maxFiles: 1,
+                maxFiles: maxFile,
+                uploadMultiple: uploadMultiple,
                 parallelUploads: 1,
-                //autoQueue: false, // Make sure the files aren't queued until manually added
                 maxFilesize: 10,
                 clickable : 'p.add-'+dropzoneId,
-                acceptedFiles: '.jpg, .png, .jpeg, .pdf',
+                acceptedFiles: '.jpg, .png, .jpeg, .pdf, .doc, .docx, .xls, .xlsx',
                 addRemoveLinks : true,
                 dictDefaultMessage : '',
                 previewTemplate : $('div#'+dropzoneId).parent().find('.previewTemplateFileDrop').html(),
@@ -41,7 +54,7 @@ var dropzoneAreas = [];
                     var $this = this;
 
                     /* set MaxFiles to 1 by default */
-                    $this.options.maxFiles = 1;
+                    $this.options.maxFiles = maxFile;
 
                     /* Load existing images for this okaz */
                     var backup_folder = $('div#'+dropzoneId).parent().find('.dropzone-backup');
@@ -90,7 +103,10 @@ var dropzoneAreas = [];
             {
                 file.previewElement.setAttribute('data-rel',response[0].id);
 
-                $('#'+dropzoneId).val(response[0].id);
+                $(response).each(function(i, el){
+                    uploadedFiles.push(el.id);
+                });
+                refreshDropzoneValue(resultInput, uploadedFiles);
 
                 $('.dz-progress').hide();
                 $('.dz-remove').show();
@@ -108,7 +124,12 @@ var dropzoneAreas = [];
             mediaDropzone
             .on("removedfile", function(file)
             {
-                $('#'+dropzoneId).val(null);
+                $(uploadedFiles).each(function(i, el) {
+                    console.log(file);
+                    if(el == file.id)
+                        delete uploadedFiles[i];
+                });
+                refreshDropzoneValue(resultInput, uploadedFiles);
             });
 
             mediaDropzone

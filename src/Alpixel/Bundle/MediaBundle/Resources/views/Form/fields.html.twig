@@ -1,10 +1,9 @@
 {% extends 'form_div_layout.html.twig' %}
 
 {% block media_widget %}
-
     {% set dropzoneId =  form.vars.id %}
 
-    <div class="dropzone_widget" data-id="{{dropzoneId}}" data-url="{{app.request.getSchemeAndHttpHost()}}{{ app.request.baseUrl }}/media/upload">
+    <div class="dropzone_widget" data-id="{{dropzoneId}}" data-multiple="{{multiple}}" data-max-file="{{max_nb_file}}" data-url="{{app.request.getSchemeAndHttpHost()}}{{ app.request.baseUrl }}/media/upload">
         <div class="previewTemplateFileDrop" style="display: none;">
             <div class="dz-preview dz-file-preview">
                 <div class="dz-details">
@@ -25,13 +24,14 @@
         {# DROPZONE #}
         <div class="center">
             <p class="add-dropzone add-{{dropzoneId}}">
-                <i class="fa fa-plus-circle"></i> Ajouter une photo / un fichier
+                <i class="fa fa-plus-circle"></i> {{helper}}
             </p>
         </div>
 
 
-        <div id="{{dropzoneId}}"></div>
-        {{ block('form_widget') }}
+        <div id="{{dropzoneId}}">
+            {{ block('form_widget') }}
+        </div>
     </div>
 {% endblock %}
 

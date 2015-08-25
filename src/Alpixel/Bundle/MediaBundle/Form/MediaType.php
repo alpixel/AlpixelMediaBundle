@@ -32,17 +32,11 @@ class MediaType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        if ('2' == Kernel::MAJOR_VERSION && Kernel::MINOR_VERSION < '1') {
-            $em = $this->registry->getEntityManager($options['em']);
-        } else {
-            $em = $this->registry->getManager($options['em']);
-        }
-
         $builder->addModelTransformer(new EntityToIdTransformer(
-            $em,
+            $em = $this->registry->getManager(),
             'Alpixel\Bundle\MediaBundle\Entity\Media',
             'secretKey',
-            $options['query_builder'],
+            null,
             $options['multiple']
         ));
 
@@ -51,18 +45,25 @@ class MediaType extends AbstractType
 
     public function onPostSubmit(FormEvent $event)
     {
-        $mediaEvent = new MediaEvent($event);
-        $this->dispatcher->dispatch(MediaEvent::POST_SUBMIT, $mediaEvent);
+        $results = $event->getForm()->getData();
+
+        if(!is_array($results))
+            $results = array($results);
+        foreach($results as $media) {
+            $mediaEvent = new MediaEvent($media);
+            $this->dispatcher->dispatch(MediaEvent::POST_SUBMIT, $mediaEvent);
+        }
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'em'            => null,
-            'property'      => null,
-            'query_builder' => null,
+            'type'          => 'text',
             'hidden'        => true,
             'multiple'      => false,
+            'label'         => false,
+            'helper'        => 'Ajouter une photo / un fichier',
+            'max_nb_file'   => 10,
         ));
     }
 
@@ -71,6 +72,10 @@ class MediaType extends AbstractType
         if (true === $options['hidden']) {
             $view->vars['type'] = 'hidden';
         }
+
+        $view->vars['helper'] = $options['helper'];
+        $view->vars['multiple'] = $options['multiple'];
+        $view->vars['max_nb_file'] = $options['max_nb_file'];
     }
 
     /**

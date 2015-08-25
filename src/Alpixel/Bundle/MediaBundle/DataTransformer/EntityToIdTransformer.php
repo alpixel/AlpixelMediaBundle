@@ -56,22 +56,19 @@ class EntityToIdTransformer implements DataTransformerInterface
             return null;
         }
 
+
         if (!$this->multiple) {
             return $this->transformSingleEntity($data);
         }
 
         $return = array();
+        $data = explode('#&#', $data);
 
         foreach ($data as $element) {
             $return[] = $this->transformSingleEntity($element);
         }
 
-        return implode(', ', $return);
-    }
-
-    protected function splitData($data)
-    {
-        return is_array($data) ? $data : explode(',', $data);
+        return $return;
     }
 
 
@@ -100,8 +97,9 @@ class EntityToIdTransformer implements DataTransformerInterface
         }
 
         $return = array();
+        $data = explode('#&#', $data);
 
-        foreach ($this->splitData($data) as $element) {
+        foreach ($data as $element) {
             $return[] = $this->reverseTransformSingleEntity($element);
         }
 
