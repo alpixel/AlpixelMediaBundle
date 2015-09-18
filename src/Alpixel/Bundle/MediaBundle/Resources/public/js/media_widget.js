@@ -9,10 +9,22 @@
         }
 
         function refreshDropzoneValue(resultInput, uploadedFiles) {
-            resultInput.val(uploadedFiles.join('#&#'));
+
+            var elements = [];
+            $('div.dz-preview[data-rel]').each(function()
+            {
+                elements.push($(this).attr('data-rel'));
+            });
+
+            if(elements.length == 0) {
+                var id = $(resultInput).attr('id');
+                $('div#'+id).parent().find('.dz-clickable').show();
+            }
+
+            resultInput.val(elements.join('#&#'));
         }
 
-        $('.dropzone_widget').each(function(i, el) {
+        $('.dropzone_widget').each(function(i, el) {
             Dropzone.autoDiscover = false;
 
             var uploadedFiles = [];

@@ -2,17 +2,18 @@
 
 namespace Alpixel\Bundle\MediaBundle\DataTransformer;
 
+use Alpixel\Bundle\MediaBundle\Entity\Media;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\NoResultException;
+use Doctrine\ORM\QueryBuilder;
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\FormException;
 use Symfony\Component\Form\Exception\TransformationFailedException;
 use Symfony\Component\Form\Exception\UnexpectedTypeException;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;
-use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\QueryBuilder;
 use Symfony\Component\PropertyAccess\PropertyAccessor;
-
-use Doctrine\ORM\NoResultException;
 
 /**
  * Data transformation class
@@ -52,6 +53,10 @@ class EntityToIdTransformer implements DataTransformerInterface
 
     public function transform($data)
     {
+        if($data instanceof Collection) {
+            return $this->reverseTransform($data);
+        }
+
         if (null === $data) {
             return null;
         }
@@ -74,16 +79,10 @@ class EntityToIdTransformer implements DataTransformerInterface
 
     protected function transformSingleEntity($data)
     {
-        if (!$this->unitOfWork->isInIdentityMap($data)) {
-            throw new FormException('Entities passed to the choice field must be managed');
-        }
-
-        if ($this->property) {
-            $propertyAccessor = new PropertyAccessor();
-            return $propertyAccessor->getValue($data, $this->property);
-        }
-
-        return current($this->unitOfWork->getEntityIdentifier($data));
+        if($data instanceof Media)
+            return $data->getSecretKey();
+        else
+            return $this->em->getRepository($this->class)->findOneBySecretKey($data);
     }
 
     public function reverseTransform($data)
@@ -92,48 +91,26 @@ class EntityToIdTransformer implements DataTransformerInterface
             return null;
         }
 
-        if (!$this->multiple) {
-            return $this->reverseTransformSingleEntity($data);
+        if(!($data instanceof Collection)) {
+            return $this->transform($data);
         }
 
         $return = array();
-        $data = explode('#&#', $data);
+
 
         foreach ($data as $element) {
             $return[] = $this->reverseTransformSingleEntity($element);
         }
 
-        return $return;
+        return implode('#&#', $return);
     }
 
     protected function reverseTransformSingleEntity($data)
     {
-        $em = $this->em;
-        $class = $this->class;
-        $repository = $em->getRepository($class);
-
-        if ($qb = $this->queryBuilder) {
-            if ($qb instanceof \Closure) {
-                $qb = $qb($repository, $data);
-            }
-
-            try {
-                $result = $qb->getQuery()->getSingleResult();
-            } catch (NoResultException $e) {
-                $result = null;
-            }
-        } else {
-            if ($this->property) {
-                $result = $repository->findOneBy(array($this->property => $data));
-            } else {
-                $result = $repository->find($data);
-            }
-        }
-
-        if (!$result) {
+        if (!($data instanceof Media)) {
             throw new TransformationFailedException('Can not find entity');
         }
 
-        return $result;
+        return $data->getSecretKey();
     }
 }

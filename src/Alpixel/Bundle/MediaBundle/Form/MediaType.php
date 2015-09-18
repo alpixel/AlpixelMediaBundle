@@ -43,12 +43,17 @@ class MediaType extends AbstractType
         $builder->addEventListener(FormEvents::POST_SUBMIT, array($this, 'onPostSubmit'));
     }
 
+
     public function onPostSubmit(FormEvent $event)
     {
         $results = $event->getForm()->getData();
 
+        if($results === null)
+            return;
+
         if(!is_array($results))
             $results = array($results);
+
         foreach($results as $media) {
             $mediaEvent = new MediaEvent($media);
             $this->dispatcher->dispatch(MediaEvent::POST_SUBMIT, $mediaEvent);
