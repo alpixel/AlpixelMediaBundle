@@ -83,6 +83,9 @@ class MediaController extends Controller
     {
       $response = new Response();
 
+      $lastModified = new \DateTime('now');
+
+
       //Checking if it is an image or not
       $src     = $this->get('media')->getAbsolutePath($media);
       $isImage = @getimagesize($src);
@@ -110,26 +113,29 @@ class MediaController extends Controller
             file_put_contents($uploadDir.$media->getUri(), $data);
           } else {
             $data = file_get_contents($src);
+            $lastModified->setTimestamp(filemtime($src));
           }
 
         } else {
           $src  = $this->get('media')->getAbsolutePath($media);
+          $lastModified->setTimestamp(filemtime($src));
           $data = file_get_contents($src);
         }
       } else {
+        $lastModified->setTimestamp(filemtime($src));
         $data = file_get_contents($src);
         $response->headers->set('Content-disposition', 'attachment;filename='.basename($media->getUri()));
       }
 
-      $date = new \DateTime();
-      $date->modify('+1 month');
-      $response->setExpires($date);
+      $response->setLastModified($lastModified);
       $response->setPublic();
-      $response->isNotModified($this->get('request'));
-      $response->setContent($data);
-      $response->setETag(md5($data));
-
       $response->headers->set('Content-Type', $media->getMime());
+
+      if ($response->isNotModified($this->get('request'))) {
+          return $response;
+      }
+
+      $response->setContent($data);
 
       return $response;
     }
