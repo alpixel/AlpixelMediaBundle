@@ -121,7 +121,14 @@ class MediaController extends Controller
         $response->headers->set('Content-disposition', 'attachment;filename='.basename($media->getUri()));
       }
 
+      $date = new \DateTime();
+      $date->modify('+1 month');
+      $response->setExpires($date);
+      $response->setPublic();
+      $response->isNotModified($this->get('request'));
       $response->setContent($data);
+      $response->setETag(md5($data));
+
       $response->headers->set('Content-Type', $media->getMime());
 
       return $response;
