@@ -6,17 +6,17 @@ parameters:
 services:
     media:
         class: Alpixel\Bundle\MediaBundle\Services\MediaManager
-        arguments:    [@doctrine, @kernel, %media.upload_folder%, %media.allowed_mimetypes%]
+        arguments:    ["@doctrine", "@kernel", %media.upload_folder%, %media.allowed_mimetypes%]
 
     twig.extension.media:
       class: Alpixel\Bundle\MediaBundle\Twig\Extension\MediaExtension
-      arguments: [@media]
+      arguments: ["@media"]
       tags:
           - { name: twig.extension }
 
     twig.extension.media_preview_extension:
         class: Alpixel\Bundle\MediaBundle\Twig\Extension\MediaPreviewExtension
-        arguments: [@request_stack, @doctrine.orm.default_entity_manager, %preview_icons%]
+        arguments: ["@request_stack", "@doctrine.orm.default_entity_manager", %preview_icons%]
         tags:
             - { name: twig.extension }
 
@@ -28,12 +28,12 @@ services:
 
     media.type:
         class: Alpixel\Bundle\MediaBundle\Form\MediaType
-        arguments: [@doctrine, @event_dispatcher]
+        arguments: ["@doctrine", "@event_dispatcher"]
         tags:
             - { name: form.type, alias: media }
 
     media.listener.media:
         class: Alpixel\Bundle\MediaBundle\EventListener\MediaListener
-        arguments: [@doctrine]
+        arguments: ["@doctrine"]
         tags:
             - { name: kernel.event_listener, event: 'alpixel.media.post_submit', method: onPostSubmit }
