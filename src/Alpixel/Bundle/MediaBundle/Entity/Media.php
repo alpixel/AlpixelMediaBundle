@@ -24,14 +24,14 @@ class Media
     /**
      * @var string
      *
-     * @ORM\Column(name="name", type="string", length=255, nullable=false)
+     * @ORM\Column(name="name", type="string", length=191, nullable=false)
      */
     protected $name;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="uri", type="string", length=255, nullable=false, unique=true)
+     * @ORM\Column(name="uri", type="string", length=191, nullable=false, unique=true)
      */
     protected $uri;
 
@@ -52,7 +52,7 @@ class Media
     /**
      * @var string
      *
-     * @ORM\Column(name="lifetime", type="datetime", length=255, nullable=true)
+     * @ORM\Column(name="lifetime", type="datetime", nullable=true)
      */
     protected $lifetime;
 
