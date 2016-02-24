@@ -16,17 +16,18 @@ class MediaExtension extends \Twig_Extension
 
     public function getName()
     {
-        return 'secretImage';
+        return 'alpixel_media';
     }
 
     public function getFilters()
     {
         return [
-            'secret_image' => new \Twig_Filter_Method($this, 'generateSecretImage', []),
+            'media_url' => new \Twig_Filter_Method($this, 'generateMediaUrl', []),
         ];
     }
 
-    public function generateSecretImage(Media $media, $field)
+    public function generateMediaUrl(Media $media, $options = array())
     {
+        return $this->mediaManager->generateUrl($media, $options);
     }
 }

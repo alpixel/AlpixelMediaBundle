@@ -85,3 +85,19 @@ liip_imagine:
 alpixel_media:
     resource: '@AlpixelMediaBundle/Resources/config/routing.yml'
 ```
+
+* Use it in front
+
+There is a twig extension capable of generating URLs, you can call it this way :
+```
+<img src='{{myMedia|media_url}}' />
+<img src='{{myMedia|media_url({public: false})}}' />
+```
+
+Available options are :
+* public : [true]/false should the url be SEO friendly or not ?
+* absolute : true/[false] should the URL be relative or not ?
+* action : [show]/download what kind of action is expected.
+* filter : the liip imagine filter used to render the image. Defaults to null (the original one)
+
+You can also generate the URL by hand. Just look at the MediaController@showMediaAction to see what are the URL expected.

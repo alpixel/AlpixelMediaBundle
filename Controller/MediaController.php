@@ -49,7 +49,9 @@ class MediaController extends Controller
     }
 
     /**
-     * @Route("/media/download/{secretKey}", name="media_download")
+     * @Route("/media/download/{id}-{name}", name="media_download_public")
+     * @Route("/media/download/{filter}/{id}-{name}", name="media_download_public_filters")
+     * @Route("/media/download/{secretKey}/{filter}", name="media_download_private")
      *
      * @Method({"GET"})
      */
@@ -64,30 +66,19 @@ class MediaController extends Controller
     }
 
     /**
-     * @Route("/media/delete/{secretKey}", name="media_delete")
-     *
-     * @Method({"POST"})
-     */
-    public function deleteMediaAction(Media $media)
-    {
-        $this->get('alpixel_media.manager')->delete($media);
-
-        return new Response();
-    }
-
-    /**
-     * @Route("/media/{secretKey}/{filter}", name="media_show")
+     * @Route("/media/{id}-{name}", name="media_show_public")
+     * @Route("/media/{filter}/{id}-{name}", name="media_show_public_filters")
+     * @Route("/media/{secretKey}/{filter}", name="media_show_private")
      *
      * @Method({"GET"})
      */
     public function showMediaAction(Media $media, $filter = null)
     {
         $response = new Response();
-
         $lastModified = new \DateTime('now');
 
-      //Checking if it is an image or not
-      $src = $this->get('alpixel_media.manager')->getAbsolutePath($media);
+        //Checking if it is an image or not
+        $src = $this->get('alpixel_media.manager')->getAbsolutePath($media);
         $isImage = @getimagesize($src);
 
         if ($isImage) {
@@ -95,9 +86,8 @@ class MediaController extends Controller
             if (!empty($filter) && $isImage) {
                 $src = $this->get('alpixel_media.manager')->getAbsolutePath($media, $filter);
                 $dataManager = $this->get('liip_imagine.data.manager');    // the data manager service
-          $filterManager = $this->get('liip_imagine.filter.manager'); // the filter manager service
-
-          $uploadDir = $this->get('alpixel_media.manager')->getUploadDir($filter);
+                $filterManager = $this->get('liip_imagine.filter.manager'); // the filter manager service
+                $uploadDir = $this->get('alpixel_media.manager')->getUploadDir($filter);
 
                 if (!is_file($src)) {
                     $fs = new Filesystem();
@@ -106,10 +96,14 @@ class MediaController extends Controller
                     }
 
                     $path = 'upload/'.$media->getUri();
-                    $image = $dataManager->find($filter, $path);                    // find the image and determine its type
-            $responseData = $filterManager->applyFilter($image, $filter);         // run the filter
-            $data = $responseData->getContent();                              // get the image from the response
-            file_put_contents($uploadDir.$media->getUri(), $data);
+
+                     // find the image and determine its type
+                    $image = $dataManager->find($filter, $path);
+
+                    // run the filter
+                    $responseData = $filterManager->applyFilter($image, $filter);
+                    $data = $responseData->getContent();
+                    file_put_contents($uploadDir.$media->getUri(), $data);
                 } else {
                     $data = file_get_contents($src);
                     $lastModified->setTimestamp(filemtime($src));
@@ -137,4 +131,5 @@ class MediaController extends Controller
 
         return $response;
     }
+
 }

@@ -170,11 +170,45 @@ class MediaManager
         }
     }
 
-    public function getSecretPath(Media $media)
+    public function generateUrl(Media $media, $options)
     {
+        $defaultOptions = [
+            'public' => true,
+            'action' => 'show',
+            'filter' => null,
+            'absolute' => false,
+        ];
+
+        $options = array_merge($defaultOptions, $options);
+        $params = [];
+
+        $routeName = 'media_';
+        if ($options['action'] === 'download') {
+            $routeName .= 'download_';
+        } else {
+            $routeName .= 'show_';
+        }
+
+        if ($options['public'] === true) {
+            $routeName .= 'public';
+            $params['id'] = $media->getId();
+            $params['name'] = $media->getName();
+        } else {
+            $routeName .= 'private';
+            $params['secretKey'] = $media->getSecretKey();
+        }
+
+        if ($options['filter'] !== null) {
+            if ($options['public'] === true) {
+                $routeName .= '_filters';
+            }
+            $params['filter'] = $options['filter'];
+        }
+
         $container = $this->container;
 
-        return $container->get('router')->generate('media_show', ['secretKey' => $media->getSecretKey()], true);
+        $router = $container->get('router');
+        return $router->generate($routeName, $params, $options['absolute']);
     }
 
     public function findFromSecret($secret)
