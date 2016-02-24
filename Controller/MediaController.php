@@ -85,7 +85,7 @@ class MediaController extends Controller
             $response->headers->set('Content-disposition', 'inline;filename='.$media->getName());
             if (!empty($filter) && $isImage) {
                 $src = $this->get('alpixel_media.manager')->getAbsolutePath($media, $filter);
-                $dataManager = $this->get('liip_imagine.data.manager');    // the data manager service
+                $dataManager = $this->get('liip_imagine.data.manager'); // the data manager service
                 $filterManager = $this->get('liip_imagine.filter.manager'); // the filter manager service
                 $uploadDir = $this->get('alpixel_media.manager')->getUploadDir($filter);
 
