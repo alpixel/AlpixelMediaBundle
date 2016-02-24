@@ -7,6 +7,7 @@ use Alpixel\Bundle\MediaBundle\Exception\InvalidMimeTypeException;
 use Cocur\Slugify\Slugify;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
+use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException;
 use Symfony\Component\HttpFoundation\File\File;
@@ -41,9 +42,6 @@ class MediaManager
    **/
   public function upload(UploadedFile $file, $dest_folder = '', \DateTime $lifetime = null)
   {
-      //Cleaning up old files before uploading this one
-    $this->cleanup();
-
     //preparing dir name
     $dest_folder = date('Ymd').'/'.date('G').'/'.$dest_folder;
 
@@ -128,14 +126,17 @@ class MediaManager
     public function delete(Media $media)
     {
         $em = $this->entityManager;
+        $fs = new Filesystem();
+
         $file_path = $this->uploadDir.$media->getUri();
 
         try {
             $file = new File($file_path);
             if ($file->isFile() && $file->isWritable()) {
-                unlink($file_path);
+                $fs->remove($file_path);
             }
         } catch (FileNotFoundException $e) {
+        } catch (IOException $e) {
         }
 
         $em->remove($media);

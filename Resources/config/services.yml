@@ -3,6 +3,7 @@ parameters:
         pdf: 'dropzone-file.png'
         unknown: 'unknown.png'
 
+
 services:
     alpixel_media.manager:
         class: Alpixel\Bundle\MediaBundle\Services\MediaManager

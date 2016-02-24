@@ -62,6 +62,20 @@ twig:
 alpixel_media:
     upload_folder: "%kernel.root_dir%/../web/upload/"
     allowed_mimetypes: ['image/*', 'application/pdf']
+    
+liip_imagine:
+    resolvers:
+        default:
+            web_path:
+                web_root: %alpixel_media.upload_folder%
+                cache_prefix: filters
+    filter_sets:
+        cache: ~
+        admin:
+            quality: 100
+            filters:
+                auto_rotate: ~
+                thumbnail: { size: [140, 93], mode: outbound }
 ```
 
 
