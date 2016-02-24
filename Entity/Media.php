@@ -3,6 +3,7 @@
 namespace Alpixel\Bundle\MediaBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * Media.
@@ -55,6 +56,29 @@ class Media
      * @ORM\Column(name="lifetime", type="datetime", nullable=true)
      */
     protected $lifetime;
+
+    /**
+     * @var \DateTime
+     *
+     * @Gedmo\Timestampable(on="create")
+     * @ORM\Column(name="date_created", type="datetime", nullable=false)
+     */
+    protected $dateCreated;
+
+    /**
+     * @var \DateTime
+     * @Gedmo\Timestampable(on="update")
+     * @ORM\Column(name="date_updated", type="datetime", nullable=false)
+     */
+    protected $dateUpdated;
+
+    /**
+     * @var string $createdFromIp
+     *
+     * @Gedmo\IpTraceable(on="create")
+     * @ORM\Column(length=45, nullable=true)
+     */
+    protected $createdFromIp;
 
     public function __construct()
     {
@@ -205,6 +229,78 @@ class Media
     public function setLifetime($lifetime)
     {
         $this->lifetime = $lifetime;
+
+        return $this;
+    }
+
+    /**
+     * Gets the value of dateCreated.
+     *
+     * @return \DateTime
+     */
+    public function getDateCreated()
+    {
+        return $this->dateCreated;
+    }
+
+    /**
+     * Sets the value of dateCreated.
+     *
+     * @param \DateTime $dateCreated the date created
+     *
+     * @return self
+     */
+    public function setDateCreated(\DateTime $dateCreated)
+    {
+        $this->dateCreated = $dateCreated;
+
+        return $this;
+    }
+
+    /**
+     * Gets the value of dateUpdated.
+     *
+     * @return \DateTime
+     */
+    public function getDateUpdated()
+    {
+        return $this->dateUpdated;
+    }
+
+    /**
+     * Sets the value of dateUpdated.
+     *
+     * @param \DateTime $dateUpdated the date updated
+     *
+     * @return self
+     */
+    public function setDateUpdated(\DateTime $dateUpdated)
+    {
+        $this->dateUpdated = $dateUpdated;
+
+        return $this;
+    }
+
+    /**
+     * Gets the value of createdFromIp.
+     *
+     * @return string $createdFromIp
+     */
+    public function getCreatedFromIp()
+    {
+        return $this->createdFromIp;
+    }
+
+    /**
+     * Sets the value of createdFromIp.
+     *
+     * @param string $createdFromIp $createdFromIp the created from ip
+     *
+     * @return self
+     */
+    public function setCreatedFromIp($createdFromIp)
+    {
+        $this->createdFromIp = $createdFromIp;
 
         return $this;
     }
