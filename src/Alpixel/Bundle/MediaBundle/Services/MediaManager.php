@@ -4,7 +4,7 @@ namespace Alpixel\Bundle\MediaBundle\Services;
 
 use Alpixel\Bundle\MediaBundle\Entity\Media;
 use Cocur\Slugify\Slugify;
-use Doctrine\Bundle\DoctrineBundle\Registry;
+use Doctrine\ORM\EntityManager;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException;
 use Symfony\Component\HttpFoundation\File\File;
@@ -14,7 +14,7 @@ use Alpixel\Bundle\MediaBundle\Exception\InvalidMimeTypeException;
 
 class MediaManager
 {
-    protected $doctrine;
+    protected $entityManager;
     protected $kernel;
     protected $uploadDir;
     protected $allowedMimetypes;
@@ -26,10 +26,10 @@ class MediaManager
     const OCTET_IN_TO =  4;
     const OCTET_IN_PO =  5;
 
-    public function __construct(Registry $doctrine, Kernel $kernel, $uploadDir, $allowedMimetypes)
+    public function __construct(EntityManager $entityManager, Kernel $kernel, $uploadDir, $allowedMimetypes)
     {
-        $this->doctrine  = $doctrine;
-        $this->kernel    = $kernel;
+        $this->entityManager = $entityManager;
+        $this->kernel = $kernel;
         $this->uploadDir = $uploadDir;
         $this->allowedMimetypes = $allowedMimetypes;
     }
@@ -66,7 +66,7 @@ class MediaManager
       $fs->mkdir($this->uploadDir.$dest_folder);
     }
 
-    $em    = $this->doctrine->getManager();
+    $em    = $this->entityManager;
     $media = new Media();
     $media->setMime($file->getMimeType());
 
@@ -80,7 +80,7 @@ class MediaManager
     }
 
     // Checking for a media with the same name
-    $mediaExists = $this->doctrine->getRepository('MediaBundle:Media')->findOneByUri($dest_folder.$filename);
+    $mediaExists = $this->entityManager->getRepository('AlpixelMediaBundle:Media')->findOneByUri($dest_folder.$filename);
     if(count($mediaExists) === 0) {
         $mediaExists = $fs->exists($this->uploadDir.$dest_folder.$filename);
     }
@@ -98,7 +98,7 @@ class MediaManager
         do {
             $media->setName($filename.'-'.$i++.'.'.$extension);
             $media->setUri($dest_folder.$media->getName());
-            $mediaExists = $this->doctrine->getRepository('MediaBundle:Media')->findOneByUri($media->getUri());
+            $mediaExists = $this->entityManager->getRepository('AlpixelMediaBundle:Media')->findOneByUri($media->getUri());
         } while (count($mediaExists) > 0);
     } else {
         $media->setName($filename.'.'.$extension);
@@ -121,7 +121,7 @@ class MediaManager
 
     public function cleanup()
     {
-        $medias = $this->doctrine->getRepository('MediaBundle:Media')->findExpiredMedias();
+        $medias = $this->entityManager->getRepository('AlpixelMediaBundle:Media')->findExpiredMedias();
         foreach ($medias as $media) {
             $this->delete($media);
         }
@@ -129,7 +129,7 @@ class MediaManager
 
     public function delete(Media $media)
     {
-        $em        = $this->doctrine->getManager();
+        $em        = $this->entityManager;
         $file_path = $this->uploadDir.$media->getUri();
 
         try {
@@ -180,7 +180,7 @@ class MediaManager
 
     public function findFromSecret($secret)
     {
-        return $this->doctrine->getRepository('MediaBundle:Media')->findOneBySecretKey($secret);
+        return $this->entityManager->getRepository('AlpixelMediaBundle:Media')->findOneBySecretKey($secret);
     }
 
     public function setAllowedMimeTypes(array $type)

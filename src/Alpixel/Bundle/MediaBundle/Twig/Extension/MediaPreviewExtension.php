@@ -46,7 +46,7 @@ class MediaPreviewExtension extends \Twig_Extension
             $link = $this->generatePath(false, $secretKey);
         }
 
-        return $twig->render('MediaBundle:Form:blocks/show_icon.html.twig', array(
+        return $twig->render('AlpixelMediaBundle:Form:blocks/show_icon.html.twig', array(
             'link'      => $link,
             'icon'      => $icon,
             'secretKey' => $secretKey,
@@ -86,7 +86,7 @@ class MediaPreviewExtension extends \Twig_Extension
 
     protected function getMimeType($secretKey)
     {
-        $mediaObject = $this->entityManager->getRepository('MediaBundle:Media')->findOneBySecretKey($secretKey);
+        $mediaObject = $this->entityManager->getRepository('AlpixelMediaBundle:Media')->findOneBySecretKey($secretKey);
 
         return ($mediaObject !== null) ? $mediaObject->getMime() : null;
     }

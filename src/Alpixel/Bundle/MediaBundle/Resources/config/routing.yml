@@ -1,0 +1,5 @@
+alpixel_media:
+    resource: "@AlpixelMediaBundle/Controller/"
+    type:     annotation
+    prefix:   /
+    options: { i18n: false }

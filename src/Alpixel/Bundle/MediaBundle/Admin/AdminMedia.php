@@ -14,7 +14,7 @@ class AdminMedia extends Admin
     protected function configureFormFields(FormMapper $formMapper)
     {
         $formMapper
-            ->add('secretKey', 'media', array(
+            ->add('secretKey', 'dropzone', array(
                 'label' => 'Photo',
             ))
         ;

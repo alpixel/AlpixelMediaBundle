@@ -34,7 +34,7 @@ class MediaController extends Controller
             if(!is_array($files))
               $files = array($files);
             foreach($files as $file) {
-              $media   = $this->get('media')->upload($file, $this->get('request')->get('folder'), $lifetime);
+              $media   = $this->get('alpixel_media.manager')->upload($file, $this->get('request')->get('folder'), $lifetime);
               $path    = $mediaPreview->generatePathFromSecretKey($media->getSecretKey());
               $returnData[] = array(
                   'id'   => $media->getSecretKey(),
@@ -55,7 +55,7 @@ class MediaController extends Controller
     public function downloadMediaAction(Media $media)
     {
         $response = new Response();
-        $response->setContent(file_get_contents($this->get('media')->getAbsolutePath($media)));
+        $response->setContent(file_get_contents($this->get('alpixel_media.manager')->getAbsolutePath($media)));
         $response->headers->set('Content-Type', 'application/force-download');
         $response->headers->set('Content-disposition', 'filename='.$media->getName());
 
@@ -69,7 +69,7 @@ class MediaController extends Controller
      */
     public function deleteMediaAction(Media $media)
     {
-        $this->get('media')->delete($media);
+        $this->get('alpixel_media.manager')->delete($media);
 
         return new Response();
     }
@@ -87,18 +87,18 @@ class MediaController extends Controller
 
 
       //Checking if it is an image or not
-      $src     = $this->get('media')->getAbsolutePath($media);
+      $src     = $this->get('alpixel_media.manager')->getAbsolutePath($media);
       $isImage = @getimagesize($src);
 
       if($isImage) {
         $response->headers->set('Content-disposition', 'inline;filename='.$media->getName());
         if (!empty($filter) && $isImage) {
 
-          $src           = $this->get('media')->getAbsolutePath($media, $filter);
+          $src           = $this->get('alpixel_media.manager')->getAbsolutePath($media, $filter);
           $dataManager   = $this->get('liip_imagine.data.manager');    // the data manager service
           $filterManager = $this->get('liip_imagine.filter.manager');// the filter manager service
 
-          $uploadDir = $this->get('media')->getUploadDir($filter);
+          $uploadDir = $this->get('alpixel_media.manager')->getUploadDir($filter);
 
           if (!is_file($src)) {
             $fs = new Filesystem();
@@ -117,7 +117,7 @@ class MediaController extends Controller
           }
 
         } else {
-          $src  = $this->get('media')->getAbsolutePath($media);
+          $src  = $this->get('alpixel_media.manager')->getAbsolutePath($media);
           $lastModified->setTimestamp(filemtime($src));
           $data = file_get_contents($src);
         }

@@ -19,21 +19,21 @@ use Symfony\Component\Form\FormView;
 use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class MediaType extends AbstractType
+class AlpixelDropzoneType extends AbstractType
 {
-    protected $registry;
+    protected $entityManager;
     protected $dispatcher;
 
-    public function __construct(RegistryInterface $registry, EventDispatcherInterface $dispatcher)
+    public function __construct(EntityManager $entityManager, EventDispatcherInterface $dispatcher)
     {
-        $this->registry   = $registry;
+        $this->entityManager = $entityManager;
         $this->dispatcher = $dispatcher;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->addModelTransformer(new EntityToIdTransformer(
-            $em = $this->registry->getManager(),
+            $this->entityManager,
             'Alpixel\Bundle\MediaBundle\Entity\Media',
             'secretKey',
             null,
@@ -100,6 +100,6 @@ class MediaType extends AbstractType
 
     public function getName()
     {
-        return 'media';
+        return 'alpixel_dropzone';
     }
 }

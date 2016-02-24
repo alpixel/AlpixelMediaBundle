@@ -13,7 +13,7 @@ class MediaRepository extends EntityRepository
 
         return $qb
         ->select('m')
-        ->from('MediaBundle:Media', 'm')
+        ->from('AlpixelMediaBundle:Media', 'm')
         ->where('m.lifetime is not null')
         ->andWhere('m.lifetime < :now')
         ->setParameter('now', new \DateTime())

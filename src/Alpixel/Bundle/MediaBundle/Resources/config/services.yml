@@ -4,36 +4,37 @@ parameters:
         unknown: 'unknown.png'
 
 services:
-    media:
+    alpixel_media.manager:
         class: Alpixel\Bundle\MediaBundle\Services\MediaManager
-        arguments:    ["@doctrine", "@kernel", %media.upload_folder%, %media.allowed_mimetypes%]
+        arguments:    ["@doctrine.orm.entity_manager", "@kernel", %alpixel_media.upload_folder%, %alpixel_media.allowed_mimetypes%]
 
     twig.extension.media:
       class: Alpixel\Bundle\MediaBundle\Twig\Extension\MediaExtension
-      arguments: ["@media"]
+      arguments: ["@alpixel_media.manager"]
       tags:
           - { name: twig.extension }
 
     twig.extension.media_preview_extension:
         class: Alpixel\Bundle\MediaBundle\Twig\Extension\MediaPreviewExtension
-        arguments: ["@request_stack", "@doctrine.orm.default_entity_manager", %preview_icons%]
+        arguments: ["@request_stack", "@doctrine.orm.entity_manager", "%preview_icons%"]
         tags:
             - { name: twig.extension }
 
-    media.admin.admin_media:
+    alpixel_media.type.alpixel_dropzone:
+        class: Alpixel\Bundle\MediaBundle\Form\AlpixelDropzoneType
+        arguments: ["@doctrine.orm.entity_manager", "@event_dispatcher"]
+        tags:
+            - { name: form.type, alias: 'alpixel_dropzone' }
+
+    alpixel_media.listener.media:
+        class: Alpixel\Bundle\MediaBundle\EventListener\MediaListener
+        arguments: ["@doctrine.orm.entity_manager"]
+        tags:
+            - { name: kernel.event_listener, event: 'alpixel.media.post_submit', method: onPostSubmit }
+
+    #AdminType
+    alpixel_media.admin.admin_media:
         class: Alpixel\Bundle\MediaBundle\Admin\AdminMedia
         arguments: [~, Alpixel\Bundle\MediaBundle\Entity\Media, SonataAdminBundle:CRUD]
         tags:
             - {name: sonata.admin, show_in_dashboard: false, manager_type: orm, group: admin, label: Media}
-
-    media.type:
-        class: Alpixel\Bundle\MediaBundle\Form\MediaType
-        arguments: ["@doctrine", "@event_dispatcher"]
-        tags:
-            - { name: form.type, alias: media }
-
-    media.listener.media:
-        class: Alpixel\Bundle\MediaBundle\EventListener\MediaListener
-        arguments: ["@doctrine"]
-        tags:
-            - { name: kernel.event_listener, event: 'alpixel.media.post_submit', method: onPostSubmit }

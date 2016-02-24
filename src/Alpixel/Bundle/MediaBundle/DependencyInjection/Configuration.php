@@ -18,14 +18,18 @@ class Configuration implements ConfigurationInterface
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('media');
+        $rootNode = $treeBuilder->root('alpixel_media');
 
         $rootNode
             ->children()
                 ->scalarNode('upload_folder')
+                    ->defaultValue("%kernel.root_dir%/../web/upload/")
+                    ->cannotBeEmpty()
                 ->end()
                 ->arrayNode('allowed_mimetypes')
                     ->prototype('scalar')
+                    ->defaultValue(['image/*', 'application/pdf'])
+                    ->cannotBeEmpty()
                 ->end()
             ->end()
         ;
