@@ -42,7 +42,7 @@ class MediaManager
    **/
   public function upload(UploadedFile $file, $dest_folder = '', \DateTime $lifetime = null)
   {
-    //preparing dir name
+      //preparing dir name
     $dest_folder = date('Ymd').'/'.date('G').'/'.$dest_folder;
 
     //checking mimetypes
