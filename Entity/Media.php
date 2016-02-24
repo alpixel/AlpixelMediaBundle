@@ -73,7 +73,7 @@ class Media
     protected $dateUpdated;
 
     /**
-     * @var string $createdFromIp
+     * @var string
      *
      * @Gedmo\IpTraceable(on="create")
      * @ORM\Column(length=45, nullable=true)
