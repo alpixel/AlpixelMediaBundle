@@ -14,8 +14,7 @@ class MediaCleanupCommand extends Command
     public function configure()
     {
         $this
-            ->setName('assetic:yoloqsdq')
-            ;
+            ->setName('assetic:yoloqsdq');
     }
 
     public function execute(InputInterface $input, OutputInterface $output)
