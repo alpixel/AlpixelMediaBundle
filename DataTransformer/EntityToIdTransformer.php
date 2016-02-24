@@ -34,7 +34,6 @@ class EntityToIdTransformer implements DataTransformerInterface
         $this->em = $em;
         $this->class = $class;
         $this->multiple = $multiple;
-
     }
 
     public function transform($data)
