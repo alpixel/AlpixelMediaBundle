@@ -5,18 +5,13 @@ namespace Alpixel\Bundle\MediaBundle\DataTransformer;
 use Alpixel\Bundle\MediaBundle\Entity\Media;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Component\Form\DataTransformerInterface;
-use Symfony\Component\Form\Exception\FormException;
 use Symfony\Component\Form\Exception\TransformationFailedException;
 use Symfony\Component\Form\Exception\UnexpectedTypeException;
-use Symfony\Component\Form\FormError;
-use Symfony\Component\Form\FormInterface;
-use Symfony\Component\PropertyAccess\PropertyAccessor;
 
 /**
- * Data transformation class
+ * Data transformation class.
  *
  * @author Gregwar <g.passault@gmail.com>
  */
@@ -53,20 +48,19 @@ class EntityToIdTransformer implements DataTransformerInterface
 
     public function transform($data)
     {
-        if($data instanceof Collection) {
+        if ($data instanceof Collection) {
             return $this->reverseTransform($data);
         }
 
         if (null === $data) {
-            return null;
+            return;
         }
-
 
         if (!$this->multiple) {
             return $this->transformSingleEntity($data);
         }
 
-        $return = array();
+        $return = [];
         $data = explode('#&#', $data);
 
         foreach ($data as $element) {
@@ -76,27 +70,26 @@ class EntityToIdTransformer implements DataTransformerInterface
         return $return;
     }
 
-
     protected function transformSingleEntity($data)
     {
-        if($data instanceof Media)
+        if ($data instanceof Media) {
             return $data->getSecretKey();
-        else
+        } else {
             return $this->em->getRepository($this->class)->findOneBySecretKey($data);
+        }
     }
 
     public function reverseTransform($data)
     {
         if (!$data) {
-            return null;
+            return;
         }
 
-        if(!($data instanceof Collection)) {
+        if (!($data instanceof Collection)) {
             return $this->transform($data);
         }
 
-        $return = array();
-
+        $return = [];
 
         foreach ($data as $element) {
             $return[] = $this->reverseTransformSingleEntity($element);

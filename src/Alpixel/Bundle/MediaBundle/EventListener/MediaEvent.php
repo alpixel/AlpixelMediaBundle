@@ -4,7 +4,6 @@ namespace Alpixel\Bundle\MediaBundle\EventListener;
 
 use Alpixel\Bundle\MediaBundle\Entity\Media;
 use Symfony\Component\EventDispatcher\Event;
-use Symfony\Component\Form\FormEvent;
 
 class MediaEvent extends Event
 {
@@ -16,7 +15,6 @@ class MediaEvent extends Event
     {
         $this->media = $media;
     }
-
 
     /**
      * Gets the value of media.

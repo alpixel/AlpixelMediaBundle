@@ -2,8 +2,8 @@
 
 namespace Alpixel\Bundle\MediaBundle\Twig\Extension;
 
-use Symfony\Component\HttpFoundation\RequestStack;
 use Doctrine\ORM\EntityManager;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 class MediaPreviewExtension extends \Twig_Extension
 {
@@ -13,56 +13,57 @@ class MediaPreviewExtension extends \Twig_Extension
 
     public function __construct(RequestStack $requestStack, EntityManager $entityManager, $previewIcons)
     {
-        $this->requestStack  = $requestStack->getCurrentRequest();
+        $this->requestStack = $requestStack->getCurrentRequest();
         $this->entityManager = $entityManager;
-        $this->previewIcon   = $previewIcons;
+        $this->previewIcon = $previewIcons;
     }
 
     public function getFilters()
     {
-        return array(
-            'previewIcon' => new \Twig_Filter_Method($this, 'previewIconFilter', array(
-                'is_safe' => array('html'),
+        return [
+            'previewIcon' => new \Twig_Filter_Method($this, 'previewIconFilter', [
+                'is_safe'           => ['html'],
                 'needs_environment' => true,
-                )
-            )
-        );
+                ]
+            ),
+        ];
     }
 
     public function previewIconFilter(\Twig_Environment $twig, $secretKey = '')
     {
-        if($secretKey == '')
+        if ($secretKey == '') {
             return '';
+        }
 
         $mimeType = $this->getMimeType($secretKey);
-        $icon     = '';
-        $link     = '';
+        $icon = '';
+        $link = '';
 
-        if(preg_match('/^image/', $mimeType) === 0) {
+        if (preg_match('/^image/', $mimeType) === 0) {
             $icon = $this->getIcon($mimeType);
             $link = $this->generatePath(true, $icon);
-        }
-        else {
+        } else {
             $link = $this->generatePath(false, $secretKey);
         }
 
-        return $twig->render('AlpixelMediaBundle:Form:blocks/show_icon.html.twig', array(
+        return $twig->render('AlpixelMediaBundle:Form:blocks/show_icon.html.twig', [
             'link'      => $link,
             'icon'      => $icon,
             'secretKey' => $secretKey,
-        ));
+        ]);
     }
 
     protected function getIcon($mimeType)
     {
         $explMime = explode('/', $mimeType);
-        $mime     = (isset($explMime[1])) ? $explMime[1] : '';
+        $mime = (isset($explMime[1])) ? $explMime[1] : '';
+
         return (array_key_exists($mime, $this->previewIcon)) ? $this->previewIcon[$mime] : $this->previewIcon['unknown'];
     }
 
     protected function generatePath($isIcon, $str)
     {
-        if($isIcon === true) {
+        if ($isIcon === true) {
             return $this->requestStack->getSchemeAndHttpHost().$this->requestStack->getBasePath().'/bundles/media/images/'.$str;
         }
 
@@ -71,13 +72,15 @@ class MediaPreviewExtension extends \Twig_Extension
 
     public function generatePathFromSecretKey($secretKey)
     {
-         if($secretKey == '')
+        if ($secretKey == '') {
             return '';
+        }
 
         $mimeType = $this->getMimeType($secretKey);
 
-        if(preg_match('/^image/', $mimeType) === 0) {
+        if (preg_match('/^image/', $mimeType) === 0) {
             $icon = $this->getIcon($mimeType);
+
             return $this->generatePath(true, $icon);
         }
 

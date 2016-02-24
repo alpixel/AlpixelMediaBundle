@@ -5,7 +5,7 @@ namespace Alpixel\Bundle\MediaBundle\Command;
 /**
  * @CronJob("PT1D")
  */
-class MediaCleanupCommande extends Command
+class MediaCleanupCommand extends Command
 {
     public function configure()
     {

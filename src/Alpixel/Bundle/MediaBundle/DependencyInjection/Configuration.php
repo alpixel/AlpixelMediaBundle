@@ -13,7 +13,7 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
 class Configuration implements ConfigurationInterface
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getConfigTreeBuilder()
     {
@@ -23,7 +23,7 @@ class Configuration implements ConfigurationInterface
         $rootNode
             ->children()
                 ->scalarNode('upload_folder')
-                    ->defaultValue("%kernel.root_dir%/../web/upload/")
+                    ->defaultValue('%kernel.root_dir%/../web/upload/')
                     ->cannotBeEmpty()
                 ->end()
                 ->arrayNode('allowed_mimetypes')
@@ -31,8 +31,7 @@ class Configuration implements ConfigurationInterface
                     ->defaultValue(['image/*', 'application/pdf'])
                     ->cannotBeEmpty()
                 ->end()
-            ->end()
-        ;
+            ->end();
 
         return $treeBuilder;
     }
