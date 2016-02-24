@@ -1,10 +1,14 @@
 {
     "name": "alpixel/mediabundle",
+    "description": "The AlpixelMediaBundle is a bundle managing media of all kinds for our projects.",
     "type": "symfony-bundle",
+    "keywords": ["alpixel", "media", "symfony2", "symfony", "bundle"],
+    "homepage": "https://www.alpixel.fr",
+    "license": "MIT",
     "authors": [
         {
-            "name": "Benjamin HUBERT",
-            "email": "benjamin@alpixel.fr"
+            "name": "ALPIXEL",
+            "email": "contact@alpixel.fr"
         }
     ],
     "minimum-stability": "dev",
@@ -14,7 +18,7 @@
         "symfony/symfony": ">=2.5"
     },
     "autoload": {
-        "psr-0": {
+        "psr-4": {
             "Alpixel\\Bundle\\MediaBundle\\": ""
         }
     }
