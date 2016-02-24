@@ -8,12 +8,12 @@ use Symfony\Component\HttpFoundation\RequestStack;
 class MediaPreviewExtension extends \Twig_Extension
 {
     protected $entityManager;
-    protected $requestStack;
+    protected $request;
     protected $previewIcons;
 
     public function __construct(RequestStack $requestStack, EntityManager $entityManager, $previewIcons)
     {
-        $this->requestStack = $requestStack->getCurrentRequest();
+        $this->request = $requestStack->getCurrentRequest();
         $this->entityManager = $entityManager;
         $this->previewIcon = $previewIcons;
     }
@@ -64,10 +64,10 @@ class MediaPreviewExtension extends \Twig_Extension
     protected function generatePath($isIcon, $str)
     {
         if ($isIcon === true) {
-            return $this->requestStack->getSchemeAndHttpHost().$this->requestStack->getBasePath().'/bundles/media/images/'.$str;
+            return $this->request->getSchemeAndHttpHost().$this->request->getBasePath().'/bundles/media/images/'.$str;
         }
 
-        return $this->requestStack->getSchemeAndHttpHost().$this->requestStack->getBaseUrl().'/media/'.$str.'/admin';
+        return $this->request->getSchemeAndHttpHost().$this->request->getBaseUrl().'/media/'.$str.'/admin';
     }
 
     public function generatePathFromSecretKey($secretKey)

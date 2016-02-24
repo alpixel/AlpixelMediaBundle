@@ -6,7 +6,12 @@ parameters:
 services:
     alpixel_media.manager:
         class: Alpixel\Bundle\MediaBundle\Services\MediaManager
-        arguments:    ["@doctrine.orm.entity_manager", "@kernel", %alpixel_media.upload_folder%, %alpixel_media.allowed_mimetypes%]
+        arguments:
+          - "@doctrine.orm.entity_manager"
+          - "%alpixel_media.upload_folder%"
+          - "%alpixel_media.allowed_mimetypes%"
+        calls:
+          - [setContainer, ['@service_container']]
 
     twig.extension.media:
       class: Alpixel\Bundle\MediaBundle\Twig\Extension\MediaExtension
@@ -21,7 +26,7 @@ services:
             - { name: twig.extension }
 
     alpixel_media.type.alpixel_dropzone:
-        class: Alpixel\Bundle\MediaBundle\Form\AlpixelDropzoneType
+        class: Alpixel\Bundle\MediaBundle\Form\Type\AlpixelDropzoneType
         arguments: ["@doctrine.orm.entity_manager", "@event_dispatcher"]
         tags:
             - { name: form.type, alias: 'alpixel_dropzone' }

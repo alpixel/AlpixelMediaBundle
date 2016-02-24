@@ -19,11 +19,7 @@ class EntityToIdTransformer implements DataTransformerInterface
 {
     protected $em;
     private $class;
-    private $property;
-    private $queryBuilder;
     private $multiple;
-
-    private $unitOfWork;
 
     public function __construct(EntityManager $em, $class, $property, $queryBuilder, $multiple)
     {
@@ -31,19 +27,14 @@ class EntityToIdTransformer implements DataTransformerInterface
             throw new UnexpectedTypeException($queryBuilder, 'Doctrine\ORM\QueryBuilder or \Closure');
         }
 
-        if (null == $class) {
+        if (null === $class) {
             throw new UnexpectedTypeException($class, 'string');
         }
 
         $this->em = $em;
-        $this->unitOfWork = $this->em->getUnitOfWork();
         $this->class = $class;
-        $this->queryBuilder = $queryBuilder;
         $this->multiple = $multiple;
 
-        if ($property) {
-            $this->property = $property;
-        }
     }
 
     public function transform($data)

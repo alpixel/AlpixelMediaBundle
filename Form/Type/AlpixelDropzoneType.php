@@ -1,9 +1,10 @@
 <?php
 
-namespace Alpixel\Bundle\MediaBundle\Form;
+namespace Alpixel\Bundle\MediaBundle\Form\Type;
 
 use Alpixel\Bundle\MediaBundle\DataTransformer\EntityToIdTransformer;
 use Alpixel\Bundle\MediaBundle\EventListener\MediaEvent;
+use Doctrine\ORM\EntityManager;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -83,8 +84,7 @@ class AlpixelDropzoneType extends AbstractType
      */
     public function finishView(FormView $view, FormInterface $form, array $options)
     {
-        $view
-            ->vars['multipart'] = true;
+        $view->vars['multipart'] = true;
     }
 
     public function getParent()

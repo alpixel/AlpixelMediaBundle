@@ -27,7 +27,7 @@ class Configuration implements ConfigurationInterface
                     ->cannotBeEmpty()
                 ->end()
                 ->arrayNode('allowed_mimetypes')
-                    ->prototype('scalar')
+                    ->prototype('scalar')->end()
                     ->defaultValue(['image/*', 'application/pdf'])
                     ->cannotBeEmpty()
                 ->end()
