@@ -1,14 +1,9 @@
 <?php
+
 namespace Alpixel\Bundle\MediaBundle\Form;
 
 use Alpixel\Bundle\MediaBundle\DataTransformer\EntityToIdTransformer;
-use Alpixel\Bundle\MediaBundle\Entity\Media;
 use Alpixel\Bundle\MediaBundle\EventListener\MediaEvent;
-use Alpixel\Bundle\MediaBundle\EventListener\MediaListener;
-use Symfony\Bridge\Doctrine\RegistryInterface;
-use Symfony\Component\EventDispatcher\ContainerAwareEventDispatcher;
-use Symfony\Component\EventDispatcher\Debug\TraceableEventDispatcher;
-use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -16,7 +11,6 @@ use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
-use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class AlpixelDropzoneType extends AbstractType
@@ -40,21 +34,22 @@ class AlpixelDropzoneType extends AbstractType
             $options['multiple']
         ));
 
-        $builder->addEventListener(FormEvents::POST_SUBMIT, array($this, 'onPostSubmit'));
+        $builder->addEventListener(FormEvents::POST_SUBMIT, [$this, 'onPostSubmit']);
     }
-
 
     public function onPostSubmit(FormEvent $event)
     {
         $results = $event->getForm()->getData();
 
-        if($results === null)
+        if ($results === null) {
             return;
+        }
 
-        if(!is_array($results))
-            $results = array($results);
+        if (!is_array($results)) {
+            $results = [$results];
+        }
 
-        foreach($results as $media) {
+        foreach ($results as $media) {
             $mediaEvent = new MediaEvent($media);
             $this->dispatcher->dispatch(MediaEvent::POST_SUBMIT, $mediaEvent);
         }
@@ -62,14 +57,14 @@ class AlpixelDropzoneType extends AbstractType
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver->setDefaults(array(
+        $resolver->setDefaults([
             'type'          => 'text',
             'hidden'        => true,
             'multiple'      => false,
             'label'         => false,
             'helper'        => 'Ajouter une photo / un fichier',
             'max_nb_file'   => 10,
-        ));
+        ]);
     }
 
     public function buildView(FormView $view, FormInterface $form, array $options)
@@ -89,8 +84,7 @@ class AlpixelDropzoneType extends AbstractType
     public function finishView(FormView $view, FormInterface $form, array $options)
     {
         $view
-            ->vars['multipart'] = true
-        ;
+            ->vars['multipart'] = true;
     }
 
     public function getParent()

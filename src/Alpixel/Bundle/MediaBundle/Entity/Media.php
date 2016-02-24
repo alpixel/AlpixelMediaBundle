@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 class Media
 {
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="media_id", type="integer", nullable=false)
      * @ORM\Id
@@ -68,7 +68,7 @@ class Media
     /**
      * Gets the value of id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -78,7 +78,7 @@ class Media
     /**
      * Sets the value of id.
      *
-     * @param integer $id the id
+     * @param int $id the id
      *
      * @return self
      */

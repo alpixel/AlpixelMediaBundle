@@ -1,9 +1,10 @@
 <?php
+
 namespace Alpixel\Bundle\MediaBundle\Repository;
 
+use Alpixel\Bundle\MediaBundle\Entity\Media;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
-use Alpixel\Bundle\MediaBundle\Entity\Media;
 
 class MediaRepository extends EntityRepository
 {
