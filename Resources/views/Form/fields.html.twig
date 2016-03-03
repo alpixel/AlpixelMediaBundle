@@ -1,0 +1,46 @@
+{% extends 'form_div_layout.html.twig' %}
+
+{% block alpixel_dropzone_widget %}
+    {% set dropzoneId =  form.vars.id %}
+
+    <link rel="stylesheet" href="/bundles/alpixelmedia/css/media_widget.css" />
+    <script type="text/javascript" src="/bundles/alpixelmedia/js/dropzone.js"></script>
+    <script type="text/javascript" src="/bundles/alpixelmedia/js/media_widget.js"></script>
+
+    <div class="dropzone_widget" data-id="{{dropzoneId}}" data-multiple="{{multiple}}" data-max-file="{{max_nb_file}}" data-url="{{app.request.getSchemeAndHttpHost()}}{{ app.request.baseUrl }}/media/upload">
+        {% block dropzone_preview_template %}
+            <div class="previewTemplateFileDrop" style="display: none;">
+                <div class="dz-preview dz-file-preview" >
+                    <div class="dz-details">
+                        <img data-dz-thumbnail />
+                    </div>
+                    <div class="dz-progress"><span class="dz-upload" data-dz-uploadprogress></span></div>
+                    <div class="dz-error-message"><span data-dz-errormessage></span></div>
+                    <a href="#" data-dz-remove class="dz-remove" title="Supprimer cette photo"><i class="fa fa-times-circle"></i></a>
+                </div>
+            </div>
+        {% endblock %}
+
+        <div class="dropzone-backup">
+            {% if form.vars.value is defined %}
+                {% for secretKey in form.vars.value|split('#&#') %}
+                    {{ secretKey|previewIcon }}
+                {% endfor %}
+            {% endif %}
+        </div>
+
+        {# DROPZONE #}
+        {% block dropzone_element %}
+            <div class="center">
+                <p class="add-dropzone add-{{dropzoneId}}">
+                    <i class="fa fa-plus-circle"></i> {{helper}}
+                </p>
+            </div>
+        {% endblock %}
+
+        <div id="{{dropzoneId}}">
+            {{ block('form_widget') }}
+        </div>
+    </div>
+{% endblock %}
+

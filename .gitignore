@@ -1,2 +1,8 @@
-*.sublime-project
-*.sublime-workspace
+/vendor/
+composer.phar
+composer.lock
+logs/
+cache/
+Tests/Fixtures/app/parameters.yml
+VagrantFile
+.vagrant
