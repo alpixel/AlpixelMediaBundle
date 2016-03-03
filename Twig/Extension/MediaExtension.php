@@ -26,7 +26,7 @@ class MediaExtension extends \Twig_Extension
         ];
     }
 
-    public function generateMediaUrl(Media $media, $options = array())
+    public function generateMediaUrl(Media $media, $options = [])
     {
         return $this->mediaManager->generateUrl($media, $options);
     }
