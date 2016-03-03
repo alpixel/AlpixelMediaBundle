@@ -131,5 +131,4 @@ class MediaController extends Controller
 
         return $response;
     }
-
 }

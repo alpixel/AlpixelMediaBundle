@@ -173,9 +173,9 @@ class MediaManager
     public function generateUrl(Media $media, $options)
     {
         $defaultOptions = [
-            'public' => true,
-            'action' => 'show',
-            'filter' => null,
+            'public'   => true,
+            'action'   => 'show',
+            'filter'   => null,
             'absolute' => false,
         ];
 
@@ -208,6 +208,7 @@ class MediaManager
         $container = $this->container;
 
         $router = $container->get('router');
+
         return $router->generate($routeName, $params, $options['absolute']);
     }
 
