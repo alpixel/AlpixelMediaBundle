@@ -12,6 +12,25 @@ use Symfony\Component\HttpFoundation\Response;
 
 class MediaController extends Controller
 {
+    
+    /**
+     * @Route("/media/upload/wysiwyg", name="upload_wysiwyg")
+     *
+     * @Method({"POST"})
+     */
+    public function uploadFilesWysiwygAction()
+    {
+        foreach ($this->get('request')->files as $file) {
+            $media = $this->get('media')->upload($file, $this->get('request')->get('folder'), null);
+        }
+        
+        $file_uploaded = $this->get('media')->getSecretPath($media);
+
+        return $this->render('AlpixelMediaBundle:admin:blocks/upload_wysiwyg.html.twig', array(
+            'file_uploaded' => $file_uploaded,
+        ));
+    }
+    
     /**
      * @Route("/media/upload", name="upload")
      *
