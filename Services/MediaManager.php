@@ -47,7 +47,7 @@ class MediaManager
     {
         //preparing dir name
         $dest_folder = date('Ymd').'/'.date('G').'/'.$dest_folder;
-    
+
         //checking mimetypes
         $mimeTypePassed = false;
         foreach ($this->allowedMimetypes as $mimeType) {
@@ -55,20 +55,20 @@ class MediaManager
                 $mimeTypePassed = true;
             }
         }
-    
+
         if (!$mimeTypePassed) {
             throw new InvalidMimeTypeException('Only following filetypes are allowed : '.implode(', ', $this->allowedMimetypes));
         }
-    
+
         $fs = new Filesystem();
         if (!$fs->exists($this->uploadDir.$dest_folder)) {
             $fs->mkdir($this->uploadDir.$dest_folder);
         }
-    
+
         $em = $this->entityManager;
         $media = new Media();
         $media->setMime($file->getMimeType());
-    
+
         // Sanitizing the filename
         $slugify = new Slugify();
         if ($file instanceof UploadedFile) {
@@ -76,27 +76,27 @@ class MediaManager
         } else {
             $filename = $slugify->slugify($file->getFilename());
         }
-    
+
         // A media can have a lifetime and will be deleted with the cleanup function
         if (!empty($lifetime)) {
             $media->setLifetime($lifetime);
         }
-    
+
         // Checking for a media with the same name
         $mediaExists = $this->entityManager->getRepository('AlpixelMediaBundle:Media')->findOneByUri($dest_folder.$filename);
         if (count($mediaExists) === 0) {
             $mediaExists = $fs->exists($this->uploadDir.$dest_folder.$filename);
         }
-    
+
         // If there's one, we try to generate a new name
         $extension = $file->getExtension();
         if (empty($extension)) {
             $extension = $file->guessExtension();
         }
-    
+
         if (count($mediaExists) > 0) {
             $filename = basename($filename, '.'.$extension);
-    
+
             $i = 1;
             do {
                 $media->setName($filename.'-'.$i++.'.'.$extension);
@@ -107,19 +107,19 @@ class MediaManager
             $media->setName($filename.'.'.$extension);
             $media->setUri($dest_folder.$media->getName());
         }
-    
+
         $file->move($this->uploadDir.$dest_folder, $media->getName());
         chmod($this->uploadDir.$dest_folder.$media->getName(), 0664);
 
         // Getting the salt defined in parameters.yml
         $secret = $this->container->getParameter('secret');
         $media->setSecretKey(hash('sha256', $secret.$media->getName().$media->getUri()));
-    
+
         $em->persist($media);
         $em->flush();
-    
+
         return $media;
-}
+    }
 
     public function cleanup()
     {
