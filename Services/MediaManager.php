@@ -38,87 +38,87 @@ class MediaManager
         $this->allowedMimetypes = $allowedMimetypes;
     }
 
-/**
- * $current_uri String actual uri of the file
- * $dest_folder String future uri of the file starting from web/upload folder
- * $lifetime DateTime lifetime of the file. If time goes over this limit, the file will be deleted.
- **/
-public function upload(File $file, $dest_folder = '', \DateTime $lifetime = null)
-{
-    //preparing dir name
-$dest_folder = date('Ymd').'/'.date('G').'/'.$dest_folder;
-
-//checking mimetypes
-$mimeTypePassed = false;
-    foreach ($this->allowedMimetypes as $mimeType) {
-        if (preg_match('@'.$mimeType.'@', $file->getMimeType())) {
-            $mimeTypePassed = true;
+    /**
+     * $current_uri String actual uri of the file
+     * $dest_folder String future uri of the file starting from web/upload folder
+     * $lifetime DateTime lifetime of the file. If time goes over this limit, the file will be deleted.
+     **/
+    public function upload(File $file, $dest_folder = '', \DateTime $lifetime = null)
+    {
+        //preparing dir name
+        $dest_folder = date('Ymd').'/'.date('G').'/'.$dest_folder;
+    
+        //checking mimetypes
+        $mimeTypePassed = false;
+        foreach ($this->allowedMimetypes as $mimeType) {
+            if (preg_match('@'.$mimeType.'@', $file->getMimeType())) {
+                $mimeTypePassed = true;
+            }
         }
-    }
-
-    if (!$mimeTypePassed) {
-        throw new InvalidMimeTypeException('Only following filetypes are allowed : '.implode(', ', $this->allowedMimetypes));
-    }
-
-    $fs = new Filesystem();
-    if (!$fs->exists($this->uploadDir.$dest_folder)) {
-        $fs->mkdir($this->uploadDir.$dest_folder);
-    }
-
-    $em = $this->entityManager;
-    $media = new Media();
-    $media->setMime($file->getMimeType());
-
-// Sanitizing the filename
-$slugify = new Slugify();
-    if ($file instanceof UploadedFile) {
-        $filename = $slugify->slugify($file->getClientOriginalName());
-    } else {
-        $filename = $slugify->slugify($file->getFilename());
-    }
-
-// A media can have a lifetime and will be deleted with the cleanup function
-if (!empty($lifetime)) {
-    $media->setLifetime($lifetime);
-}
-
-// Checking for a media with the same name
-$mediaExists = $this->entityManager->getRepository('AlpixelMediaBundle:Media')->findOneByUri($dest_folder.$filename);
-    if (count($mediaExists) === 0) {
-        $mediaExists = $fs->exists($this->uploadDir.$dest_folder.$filename);
-    }
-
-// If there's one, we try to generate a new name
-$extension = $file->getExtension();
-    if (empty($extension)) {
-        $extension = $file->guessExtension();
-    }
-
-    if (count($mediaExists) > 0) {
-        $filename = basename($filename, '.'.$extension);
-
-        $i = 1;
-        do {
-            $media->setName($filename.'-'.$i++.'.'.$extension);
+    
+        if (!$mimeTypePassed) {
+            throw new InvalidMimeTypeException('Only following filetypes are allowed : '.implode(', ', $this->allowedMimetypes));
+        }
+    
+        $fs = new Filesystem();
+        if (!$fs->exists($this->uploadDir.$dest_folder)) {
+            $fs->mkdir($this->uploadDir.$dest_folder);
+        }
+    
+        $em = $this->entityManager;
+        $media = new Media();
+        $media->setMime($file->getMimeType());
+    
+        // Sanitizing the filename
+        $slugify = new Slugify();
+        if ($file instanceof UploadedFile) {
+            $filename = $slugify->slugify($file->getClientOriginalName());
+        } else {
+            $filename = $slugify->slugify($file->getFilename());
+        }
+    
+        // A media can have a lifetime and will be deleted with the cleanup function
+        if (!empty($lifetime)) {
+            $media->setLifetime($lifetime);
+        }
+    
+        // Checking for a media with the same name
+        $mediaExists = $this->entityManager->getRepository('AlpixelMediaBundle:Media')->findOneByUri($dest_folder.$filename);
+        if (count($mediaExists) === 0) {
+            $mediaExists = $fs->exists($this->uploadDir.$dest_folder.$filename);
+        }
+    
+        // If there's one, we try to generate a new name
+        $extension = $file->getExtension();
+        if (empty($extension)) {
+            $extension = $file->guessExtension();
+        }
+    
+        if (count($mediaExists) > 0) {
+            $filename = basename($filename, '.'.$extension);
+    
+            $i = 1;
+            do {
+                $media->setName($filename.'-'.$i++.'.'.$extension);
+                $media->setUri($dest_folder.$media->getName());
+                $mediaExists = $this->entityManager->getRepository('AlpixelMediaBundle:Media')->findOneByUri($media->getUri());
+            } while (count($mediaExists) > 0);
+        } else {
+            $media->setName($filename.'.'.$extension);
             $media->setUri($dest_folder.$media->getName());
-            $mediaExists = $this->entityManager->getRepository('AlpixelMediaBundle:Media')->findOneByUri($media->getUri());
-        } while (count($mediaExists) > 0);
-    } else {
-        $media->setName($filename.'.'.$extension);
-        $media->setUri($dest_folder.$media->getName());
-    }
+        }
+    
+        $file->move($this->uploadDir.$dest_folder, $media->getName());
+        chmod($this->uploadDir.$dest_folder.$media->getName(), 0664);
 
-    $file->move($this->uploadDir.$dest_folder, $media->getName());
-    chmod($this->uploadDir.$dest_folder.$media->getName(), 0664);
-
-// Getting the salt defined in parameters.yml
-$secret = $this->container->getParameter('secret');
-    $media->setSecretKey(hash('sha256', $secret.$media->getName().$media->getUri()));
-
-    $em->persist($media);
-    $em->flush();
-
-    return $media;
+        // Getting the salt defined in parameters.yml
+        $secret = $this->container->getParameter('secret');
+        $media->setSecretKey(hash('sha256', $secret.$media->getName().$media->getUri()));
+    
+        $em->persist($media);
+        $em->flush();
+    
+        return $media;
 }
 
     public function cleanup()
@@ -179,11 +179,11 @@ $secret = $this->container->getParameter('secret');
     public function generateUrl(Media $media, $options)
     {
         $defaultOptions = [
-'public'   => true,
-'action'   => 'show',
-'filter'   => null,
-'absolute' => false,
-];
+            'public'   => true,
+            'action'   => 'show',
+            'filter'   => null,
+            'absolute' => false,
+        ];
 
         $options = array_merge($defaultOptions, $options);
         $params = [];
