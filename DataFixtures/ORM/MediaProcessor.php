@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace Alpixel\Bundle\MediaBundle\DataFixtures\ORM;
 
@@ -6,10 +6,8 @@ use Nelmio\Alice\ProcessorInterface;
 
 class MediaProcessor implements ProcessorInterface
 {
-
     public function __construct()
     {
-
     }
 
     /**
@@ -17,7 +15,6 @@ class MediaProcessor implements ProcessorInterface
      */
     public function preProcess($object)
     {
-
     }
 
     /**

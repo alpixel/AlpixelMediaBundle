@@ -8,54 +8,57 @@ use Symfony\Component\HttpFoundation\File\File;
 
 class MediaProvider extends BaseProvider
 {
-	protected $mediaManager;
+    protected $mediaManager;
 
-	public function __construct(MediaManager $mediaManager)
-	{
-		$this->mediaManager = $mediaManager;
-	}
+    public function __construct(MediaManager $mediaManager)
+    {
+        $this->mediaManager = $mediaManager;
+    }
 
-   public function randomMedia ($width = null, $height = null, $type = "color")
-   {
-		$file = $this->downloadMedia($this->generateUrl($width, $height, $type));
-		$media = $this->mediaManager->upload($file);
-		return $media;
-   }
+    public function randomMedia($width = null, $height = null, $type = 'color')
+    {
+        $file = $this->downloadMedia($this->generateUrl($width, $height, $type));
+        $media = $this->mediaManager->upload($file);
 
-   protected function generateUrl ($width = null, $height = null, $type = "color")
-   {
-   		$url = "http://loremflickr.com/";
+        return $media;
+    }
 
-   		if ($type !== 'color') {
-   			$url .= 'g/';
-   		}
+    protected function generateUrl($width = null, $height = null, $type = 'color')
+    {
+        $url = 'http://loremflickr.com/';
 
-   		if($width === null && $height !== null) {
-   			$width = round($height * 4 / 3);
-   		} elseif ($width !== null && $height === null) {
-   			$height = round($width * 3 / 4);
-   		} else {
-   			$width = rand(800, 1600);
-   			$height = round($width * 3 / 4);
-   		}
+        if ($type !== 'color') {
+            $url .= 'g/';
+        }
 
-   		$url .= $width.'/'.$height;
+        if ($width === null && $height !== null) {
+            $width = round($height * 4 / 3);
+        } elseif ($width !== null && $height === null) {
+            $height = round($width * 3 / 4);
+        } else {
+            $width = rand(800, 1600);
+            $height = round($width * 3 / 4);
+        }
 
-   		$category = ['abstract', 'city', 'nature', 'moutains'];
-   		$url .= '/'.$category[array_rand($category, 1)].'/';
-   		return $url;
-   }
+        $url .= $width.'/'.$height;
 
-   protected function downloadMedia($url)
-   {
-   	$filepath = sys_get_temp_dir().'/tmp.jpg';
-	$ch = curl_init($url);
-	$fp = fopen($filepath,'wb');
-	curl_setopt($ch, CURLOPT_FILE, $fp);
-	curl_setopt($ch, CURLOPT_HEADER, 0);
-	curl_exec($ch);
-	curl_close($ch);
-	fclose($fp);
-	return new File($filepath, 'random');
-   }
+        $category = ['abstract', 'city', 'nature', 'moutains'];
+        $url .= '/'.$category[array_rand($category, 1)].'/';
+
+        return $url;
+    }
+
+    protected function downloadMedia($url)
+    {
+        $filepath = sys_get_temp_dir().'/tmp.jpg';
+        $ch = curl_init($url);
+        $fp = fopen($filepath, 'wb');
+        curl_setopt($ch, CURLOPT_FILE, $fp);
+        curl_setopt($ch, CURLOPT_HEADER, 0);
+        curl_exec($ch);
+        curl_close($ch);
+        fclose($fp);
+
+        return new File($filepath, 'random');
+    }
 }
