@@ -21,7 +21,7 @@ class MediaPreviewExtension extends \Twig_Extension
     public function getFilters()
     {
         return [
-            'previewIcon' => new \Twig_Filter_Method($this, 'previewIconFilter', [
+            new \Twig_SimpleFilter('previewIcon', [$this, 'previewIconFilter'], [
                 'is_safe'           => ['html'],
                 'needs_environment' => true,
                 ]

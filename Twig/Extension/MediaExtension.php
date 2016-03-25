@@ -22,7 +22,7 @@ class MediaExtension extends \Twig_Extension
     public function getFilters()
     {
         return [
-            'media_url' => new \Twig_Filter_Method($this, 'generateMediaUrl', []),
+            new \Twig_SimpleFilter('media_url', [$this, 'generateMediaUrl']),
         ];
     }
 
