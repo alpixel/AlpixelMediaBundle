@@ -1,25 +1,32 @@
 {
-    "name": "alpixel/mediabundle",
-    "description": "The AlpixelMediaBundle is a bundle managing media of all kinds for our projects.",
-    "type": "symfony-bundle",
-    "keywords": ["alpixel", "media", "symfony2", "symfony", "bundle"],
-    "homepage": "https://www.alpixel.fr",
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "ALPIXEL",
-            "email": "contact@alpixel.fr"
-        }
-    ],
-    "minimum-stability": "dev",
-    "require": {
-        "php": ">=5.3.0",
-        "liip/imagine-bundle": "^1.5",
-        "symfony/symfony": ">=2.5"
-    },
-    "autoload": {
-        "psr-4": {
-            "Alpixel\\Bundle\\MediaBundle\\": ""
-        }
+  "name": "alpixel/mediabundle",
+  "description": "The AlpixelMediaBundle is a bundle managing media of all kinds for our projects.",
+  "type": "symfony-bundle",
+  "keywords": [
+    "alpixel",
+    "media",
+    "symfony2",
+    "symfony",
+    "bundle"
+  ],
+  "homepage": "https://www.alpixel.fr",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "ALPIXEL",
+      "email": "contact@alpixel.fr"
     }
+  ],
+  "minimum-stability": "dev",
+  "require": {
+    "php": ">=5.3.0",
+    "liip/imagine-bundle": "^1.5",
+    "symfony/symfony": ">=2.5",
+    "alpixel/cronbundle": "~1.1"
+  },
+  "autoload": {
+    "psr-4": {
+      "Alpixel\\Bundle\\MediaBundle\\": ""
+    }
+  }
 }
