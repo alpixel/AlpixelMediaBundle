@@ -17,7 +17,10 @@ class MediaProvider extends BaseProvider
 
     public function randomMedia($width = null, $height = null, $type = 'color')
     {
-        $file = $this->downloadMedia($this->generateUrl($width, $height, $type));
+        do {
+            $file = $this->downloadMedia($this->generateUrl($width, $height, $type));
+        } while (!preg_match("@^image/@", $file->getMimeType()));
+
         $media = $this->mediaManager->upload($file);
 
         return $media;
@@ -40,17 +43,17 @@ class MediaProvider extends BaseProvider
             $height = round($width * 3 / 4);
         }
 
-        $url .= $width.'/'.$height;
+        $url .= $width . '/' . $height;
 
         $category = ['abstract', 'city', 'nature', 'moutains'];
-        $url .= '/'.$category[array_rand($category, 1)].'/';
+        $url .= '/' . $category[array_rand($category, 1)] . '/';
 
         return $url;
     }
 
     protected function downloadMedia($url)
     {
-        $filepath = sys_get_temp_dir().'/tmp.jpg';
+        $filepath = sys_get_temp_dir() . '/tmp.jpg';
         $ch = curl_init($url);
         $fp = fopen($filepath, 'wb');
         curl_setopt($ch, CURLOPT_FILE, $fp);
