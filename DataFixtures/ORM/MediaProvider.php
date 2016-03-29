@@ -39,7 +39,9 @@ class MediaProvider extends BaseProvider
         } elseif ($width !== null && $height === null) {
             $height = round($width * 3 / 4);
         } else {
-            $width = rand(800, 1600);
+            $aWidth = [800, 1200, 1600];
+            $width = array_rand($aValues, 1);
+            $width = $aValues[$width];
             $height = round($width * 3 / 4);
         }
 
