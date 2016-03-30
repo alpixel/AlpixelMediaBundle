@@ -55,7 +55,7 @@ class MediaProvider extends BaseProvider
 
     protected function downloadMedia($url)
     {
-        $filepath = sys_get_temp_dir().'/tmp.jpg';
+        $filepath = sys_get_temp_dir().'/'.uniqid().'.jpg';
         $ch = curl_init($url);
         $fp = fopen($filepath, 'wb');
         curl_setopt($ch, CURLOPT_FILE, $fp);
