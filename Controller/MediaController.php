@@ -8,6 +8,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class MediaController extends Controller
@@ -17,10 +18,10 @@ class MediaController extends Controller
      *
      * @Method({"POST"})
      */
-    public function uploadFilesWysiwygAction()
+    public function uploadFilesWysiwygAction(Request $request)
     {
-        foreach ($this->get('request')->files as $file) {
-            $media = $this->get('media')->upload($file, $this->get('request')->get('folder'), null);
+        foreach ($request->files as $file) {
+            $media = $this->get('media')->upload($file, $request->get('folder'), null);
         }
 
         $file_uploaded = $this->get('media')->getSecretPath($media);
@@ -35,25 +36,25 @@ class MediaController extends Controller
      *
      * @Method({"POST"})
      */
-    public function uploadAction()
+    public function uploadAction(Request $request)
     {
         $returnData = [];
 
-        if ($this->get('request')->get('lifetime') !== null) {
-            $lifetime = new \DateTime($this->get('request')->get('lifetime'));
+        if ($request->get('lifetime') !== null) {
+            $lifetime = new \DateTime($request->get('lifetime'));
         }
 
         if (empty($lifetime) || $lifetime == new \DateTime('now')) {
             $lifetime = new \DateTime('+6 hours');
         }
 
-        $mediaPreview = $this->container->get('twig.extension.media_preview_extension');
-        foreach ($this->get('request')->files as $files) {
+        $mediaPreview = $this->get('twig.extension.media_preview_extension');
+        foreach ($request->files as $files) {
             if (!is_array($files)) {
                 $files = [$files];
             }
             foreach ($files as $file) {
-                $media = $this->get('alpixel_media.manager')->upload($file, $this->get('request')->get('folder'), $lifetime);
+                $media = $this->get('alpixel_media.manager')->upload($file, $request->get('folder'), $lifetime);
                 $path = $mediaPreview->generatePathFromSecretKey($media->getSecretKey());
                 $returnData[] = [
                   'id'   => $media->getSecretKey(),
@@ -90,7 +91,7 @@ class MediaController extends Controller
      *
      * @Method({"GET"})
      */
-    public function showMediaAction(Media $media, $filter = null)
+    public function showMediaAction(Request $request, Media $media, $filter = null)
     {
         $response = new Response();
         $lastModified = new \DateTime('now');
@@ -141,7 +142,7 @@ class MediaController extends Controller
         $response->setPublic();
         $response->headers->set('Content-Type', $media->getMime());
 
-        if ($response->isNotModified($this->get('request'))) {
+        if ($response->isNotModified($request)) {
             return $response;
         }
 

@@ -12,6 +12,7 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\Routing\Generator\UrlGenerator;
 
 class MediaManager
 {
@@ -212,10 +213,16 @@ class MediaManager
         }
 
         $container = $this->container;
-
         $router = $container->get('router');
 
-        return $router->generate($routeName, $params, $options['absolute']);
+        if($options['absolute']) {
+            $referenceType = UrlGenerator::ABSOLUTE_URL;
+        } else {
+            $referenceType = UrlGenerator::ABSOLUTE_PATH;
+        }
+
+
+        return $router->generate($routeName, $params, $referenceType);
     }
 
     public function findFromSecret($secret)
