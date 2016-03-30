@@ -215,12 +215,11 @@ class MediaManager
         $container = $this->container;
         $router = $container->get('router');
 
-        if($options['absolute']) {
+        if ($options['absolute']) {
             $referenceType = UrlGenerator::ABSOLUTE_URL;
         } else {
             $referenceType = UrlGenerator::ABSOLUTE_PATH;
         }
-
 
         return $router->generate($routeName, $params, $referenceType);
     }
