@@ -3,9 +3,9 @@
 {% block alpixel_dropzone_widget %}
     {% set dropzoneId =  form.vars.id %}
 
-    <link rel="stylesheet" href="/bundles/alpixelmedia/css/media_widget.css" />
-    <script type="text/javascript" src="/bundles/alpixelmedia/js/dropzone.js"></script>
-    <script type="text/javascript" src="/bundles/alpixelmedia/js/media_widget.js"></script>
+    <link rel="stylesheet" href="{{asset('bundles/alpixelmedia/css/media_widget.css')}}" />
+    <script type="text/javascript" src="{{asset('bundles/alpixelmedia/js/dropzone.js')}}"></script>
+    <script type="text/javascript" src="{{asset('bundles/alpixelmedia/js/media_widget.js')}}"></script>
 
     <div class="dropzone_widget" data-id="{{dropzoneId}}" data-multiple="{{multiple}}" data-max-file="{{max_nb_file}}" data-url="{{app.request.getSchemeAndHttpHost()}}{{ app.request.baseUrl }}/media/upload">
         {% block dropzone_preview_template %}
