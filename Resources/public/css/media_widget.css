@@ -4,7 +4,7 @@
   display: none;
 }
 .dropzone_widget .add-dropzone {
-  margin: 10px 20%;
+  margin: 10px 0;
   display: block;
   text-align: center;
   background-color: #222d32;
@@ -22,13 +22,26 @@
 .dropzone_widget .add-dropzone:hover {
   background-color: #0d1214;
 }
+
+.dropzone_widget .dz-started {
+  text-align:center;
+}
 .dropzone_widget .dz-preview {
   position: relative;
-  /* Progress bar */
+  padding:15px;
+  margin:0 15px 15px 0;
+  display:inline-block;
+  background-color:#f5f5f5;
+  border:1px solid #f0f0f0;
 }
+.dropzone_widget .dz-preview:hover {
+  background-color:#efefef;
+  border:1px solid #dddddd;
+}
+
 .dropzone_widget .dz-preview .dz-remove {
   display: block;
-  margin: 5px auto;
+  margin: 5px auto 0;
   font-size: 14pt;
   color: #c41515;
   text-align: center;
@@ -59,9 +72,9 @@
 }
 .dropzone_widget .dz-preview .dz-progress {
   position: absolute;
-  top: 0px;
-  left: 20%;
-  right: 20%;
+  top: 12px;
+  left: 15px;
+  right: 15px;
   height: 6px;
   background: #d7d7d7;
   display: none;
@@ -81,12 +94,37 @@
   -ms-transition: width 0.3s ease-in-out;
   transition: width 0.3s ease-in-out;
   -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  -ms-border-radius: 2px;
   border-radius: 2px;
   position: absolute;
   top: 0;
   left: 0;
   width: 0%;
   height: 100%;
+}
+
+
+#pictureLoader {
+  margin:20px 0;
+  background-color:#215c79;
+  color:white;
+  padding:15px;
+  text-align:center;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  -ms-border-radius: 4px;
+  border-radius: 4px;
+}
+
+#pictureLoader p {
+  font-size:13pt;
+  line-height:40px;
+  padding-left:30px;
+  display:inline-block;
+  vertical-align: top;
+  height:40px;
+  margin:0;
 }
 
 
@@ -121,4 +159,146 @@
   to {
     background-position: -7px -400px;
   }
+}
+
+
+
+.sk-fading-circle {
+  width: 40px;
+  height: 40px;
+  position: relative;
+  display:inline-block;
+  vertical-align: top;
+}
+
+.sk-fading-circle .sk-circle {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.sk-fading-circle .sk-circle:before {
+  content: '';
+  display: block;
+  margin: 0 auto;
+  width: 15%;
+  height: 15%;
+  background-color: white;
+  -webkit-border-radius: 100%;
+  -moz-border-radius: 100%;
+  -ms-border-radius: 100%;
+  border-radius: 100%;
+  -webkit-animation: sk-circleFadeDelay 1.2s infinite ease-in-out both;
+          animation: sk-circleFadeDelay 1.2s infinite ease-in-out both;
+}
+.sk-fading-circle .sk-circle2 {
+  -webkit-transform: rotate(30deg);
+      -ms-transform: rotate(30deg);
+          transform: rotate(30deg);
+}
+.sk-fading-circle .sk-circle3 {
+  -webkit-transform: rotate(60deg);
+      -ms-transform: rotate(60deg);
+          transform: rotate(60deg);
+}
+.sk-fading-circle .sk-circle4 {
+  -webkit-transform: rotate(90deg);
+      -ms-transform: rotate(90deg);
+          transform: rotate(90deg);
+}
+.sk-fading-circle .sk-circle5 {
+  -webkit-transform: rotate(120deg);
+      -ms-transform: rotate(120deg);
+          transform: rotate(120deg);
+}
+.sk-fading-circle .sk-circle6 {
+  -webkit-transform: rotate(150deg);
+      -ms-transform: rotate(150deg);
+          transform: rotate(150deg);
+}
+.sk-fading-circle .sk-circle7 {
+  -webkit-transform: rotate(180deg);
+      -ms-transform: rotate(180deg);
+          transform: rotate(180deg);
+}
+.sk-fading-circle .sk-circle8 {
+  -webkit-transform: rotate(210deg);
+      -ms-transform: rotate(210deg);
+          transform: rotate(210deg);
+}
+.sk-fading-circle .sk-circle9 {
+  -webkit-transform: rotate(240deg);
+      -ms-transform: rotate(240deg);
+          transform: rotate(240deg);
+}
+.sk-fading-circle .sk-circle10 {
+  -webkit-transform: rotate(270deg);
+      -ms-transform: rotate(270deg);
+          transform: rotate(270deg);
+}
+.sk-fading-circle .sk-circle11 {
+  -webkit-transform: rotate(300deg);
+      -ms-transform: rotate(300deg);
+          transform: rotate(300deg);
+}
+.sk-fading-circle .sk-circle12 {
+  -webkit-transform: rotate(330deg);
+      -ms-transform: rotate(330deg);
+          transform: rotate(330deg);
+}
+.sk-fading-circle .sk-circle2:before {
+  -webkit-animation-delay: -1.1s;
+          animation-delay: -1.1s;
+}
+.sk-fading-circle .sk-circle3:before {
+  -webkit-animation-delay: -1s;
+          animation-delay: -1s;
+}
+.sk-fading-circle .sk-circle4:before {
+  -webkit-animation-delay: -0.9s;
+          animation-delay: -0.9s;
+}
+.sk-fading-circle .sk-circle5:before {
+  -webkit-animation-delay: -0.8s;
+          animation-delay: -0.8s;
+}
+.sk-fading-circle .sk-circle6:before {
+  -webkit-animation-delay: -0.7s;
+          animation-delay: -0.7s;
+}
+.sk-fading-circle .sk-circle7:before {
+  -webkit-animation-delay: -0.6s;
+          animation-delay: -0.6s;
+}
+.sk-fading-circle .sk-circle8:before {
+  -webkit-animation-delay: -0.5s;
+          animation-delay: -0.5s;
+}
+.sk-fading-circle .sk-circle9:before {
+  -webkit-animation-delay: -0.4s;
+          animation-delay: -0.4s;
+}
+.sk-fading-circle .sk-circle10:before {
+  -webkit-animation-delay: -0.3s;
+          animation-delay: -0.3s;
+}
+.sk-fading-circle .sk-circle11:before {
+  -webkit-animation-delay: -0.2s;
+          animation-delay: -0.2s;
+}
+.sk-fading-circle .sk-circle12:before {
+  -webkit-animation-delay: -0.1s;
+          animation-delay: -0.1s;
+}
+
+@-webkit-keyframes sk-circleFadeDelay {
+  0%, 39%, 100% { opacity: 0; }
+  40% { opacity: 1; }
+}
+
+@keyframes sk-circleFadeDelay {
+  0%, 39%, 100% { opacity: 0; }
+  40% { opacity: 1; }
 }

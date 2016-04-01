@@ -13,7 +13,7 @@
             var elements = [];
             $('div.dz-preview[data-rel]').each(function()
             {
-                elements.push($(this).attr('data-rel'));
+                elements.push($(this).data('rel'));
             });
 
             if(elements.length == 0) {
@@ -28,12 +28,12 @@
             Dropzone.autoDiscover = false;
 
             var uploadedFiles = [];
-            var dropzoneId      = $(this).attr('data-id');
-            var dropzoneUri     = $(this).attr('data-url');
-            var uploadMultiple  = ($(this).attr('data-multiple').length > 0);
+            var dropzoneId      = $(this).data('id');
+            var dropzoneUri     = $(this).data('url');
+            var uploadMultiple  = ($(this).data('multiple') > 0);
 
             if(uploadMultiple)
-                var maxFile = $(this).attr('data-max-file');
+                var maxFile = $(this).data('max-file');
             else
                 var maxFile = 1;
 
@@ -100,10 +100,10 @@
 
                     /* Create Waiting message */
                     if($('#pictureLoader').length == 0) {
-                        var loader = $('<p />',{
+                        var loader = $('<div />',{
                             'id' : 'pictureLoader',
-                            'html' : 'Merci de patienter pendant l\'upload de votre fichier/image'
-                        }).appendTo($('form .form-actions')).hide();
+                            'html' : '<div class="sk-fading-circle"><div class="sk-circle1 sk-circle"></div><div class="sk-circle2 sk-circle"></div><div class="sk-circle3 sk-circle"></div><div class="sk-circle4 sk-circle"></div><div class="sk-circle5 sk-circle"></div><div class="sk-circle6 sk-circle"></div><div class="sk-circle7 sk-circle"></div><div class="sk-circle8 sk-circle"></div><div class="sk-circle9 sk-circle"></div><div class="sk-circle10 sk-circle"></div><div class="sk-circle11 sk-circle"></div><div class="sk-circle12 sk-circle"></div></div><p>Merci de patienter pendant l\'upload de votre fichier...</p>'
+                        }).insertAfter($('form .form-actions')).hide();
                     }
                 }
             });
@@ -149,7 +149,7 @@
                 showHideDropzoneButton(mediaDropzone.files.length,mediaDropzone.options.maxFiles);
 
                 /* Show submit button when uploading is finished */
-                $('form .form-actions').find('button').show();
+                $('form .form-actions').show();
                 $('#pictureLoader').hide();
             });
 
@@ -177,7 +177,7 @@
             {
 
                 /* Hide submit button while uploading */
-                $('form .form-actions').find('button').hide();
+                $('form .form-actions').hide();
                 $('#pictureLoader').show();
             });
 
