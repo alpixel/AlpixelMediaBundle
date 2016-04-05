@@ -21,10 +21,10 @@ class MediaController extends Controller
     public function uploadFilesWysiwygAction(Request $request)
     {
         foreach ($request->files as $file) {
-            $media = $this->get('media')->upload($file, $request->get('folder'), null);
+            $media = $this->get('alpixel_media.manager')->upload($file, $request->get('folder'), null);
         }
 
-        $file_uploaded = $this->get('media')->getSecretPath($media);
+        $file_uploaded = $this->get('alpixel_media.manager')->getSecretPath($media);
 
         return $this->render('AlpixelMediaBundle:admin:blocks/upload_wysiwyg.html.twig', [
             'file_uploaded' => $file_uploaded,
