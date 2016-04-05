@@ -17,6 +17,8 @@ class MediaController extends Controller
      * @Route("/media/upload/wysiwyg", name="upload_wysiwyg")
      *
      * @Method({"POST"})
+     * @param Request $request
+     * @return Response
      */
     public function uploadFilesWysiwygAction(Request $request)
     {
@@ -35,6 +37,8 @@ class MediaController extends Controller
      * @Route("/media/upload", name="upload")
      *
      * @Method({"POST"})
+     * @param Request $request
+     * @return JsonResponse
      */
     public function uploadAction(Request $request)
     {
