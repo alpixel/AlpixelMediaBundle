@@ -24,7 +24,7 @@ class MediaController extends Controller
             $media = $this->get('alpixel_media.manager')->upload($file, $request->get('folder'), null);
         }
 
-        $file_uploaded = $this->get('alpixel_media.manager')->getSecretPath($media);
+        $file_uploaded = $this->get('alpixel_media.manager')->generateUrl($media);
 
         return $this->render('AlpixelMediaBundle:admin:blocks/upload_wysiwyg.html.twig', [
             'file_uploaded' => $file_uploaded,
