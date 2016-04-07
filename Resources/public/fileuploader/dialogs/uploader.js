@@ -34,3 +34,4 @@ CKEDITOR.dialog.add( 'uploaderDialog', function ( editor ) {
         }
     };
 });
+

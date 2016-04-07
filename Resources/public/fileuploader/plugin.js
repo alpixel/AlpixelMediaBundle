@@ -1,12 +1,10 @@
 CKEDITOR.plugins.add( 'fileuploader', {
-    icons: 'fileuploader',
+    icons: 'uploader',
     init: function( editor ) {
         editor.addCommand( 'uploader-cmd', new CKEDITOR.dialogCommand('uploaderDialog') );
         editor.ui.addButton( 'Uploader', {
             label: 'Upload your files',
-            command: 'uploader-cmd',
-            icons: this.path + 'fileuploader/fileuploader.png',
-            toolbar: 'upload'
+            command: 'uploader-cmd'
         });
 
         CKEDITOR.dialog.add('uploaderDialog', this.path + 'dialogs/uploader.js' );

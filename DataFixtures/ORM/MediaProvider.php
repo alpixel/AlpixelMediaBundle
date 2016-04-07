@@ -45,6 +45,7 @@ class MediaProvider extends BaseProvider
             $width = $aWidth[$width];
             $height = round($width * 3 / 4);
         }
+
         return ['w' => $width, 'h' => $height];
     }
 
@@ -56,17 +57,17 @@ class MediaProvider extends BaseProvider
             $url .= 'g/';
         }
 
-        $url .= $dimensions['w'] . '/' . $dimensions['h'];
+        $url .= $dimensions['w'].'/'.$dimensions['h'];
 
         $category = ['abstract', 'city', 'nature', 'moutains'];
-        $url .= '/' . $category[array_rand($category, 1)] . '/';
+        $url .= '/'.$category[array_rand($category, 1)].'/';
 
         return $url;
     }
 
     protected function downloadMedia($url)
     {
-        $filepath = sys_get_temp_dir() . '/' . uniqid() . '.jpg';
+        $filepath = sys_get_temp_dir().'/'.uniqid().'.jpg';
         $ch = curl_init($url);
         $fp = fopen($filepath, 'wb');
         curl_setopt($ch, CURLOPT_FILE, $fp);
@@ -81,16 +82,16 @@ class MediaProvider extends BaseProvider
     protected function fetchFromCache($dimensions)
     {
         $fs = new Filesystem();
-        $cacheDir = $_SERVER['HOME'] . '/.symfony/media';
+        $cacheDir = $_SERVER['HOME'].'/.symfony/media';
         if (!$fs->exists($cacheDir)) {
             $fs->mkdir($cacheDir, 0777);
         } else {
-            $cacheDir .= '/' . $dimensions['w'] . '-' . $dimensions['h'];
+            $cacheDir .= '/'.$dimensions['w'].'-'.$dimensions['h'];
             if (!$fs->exists($cacheDir)) {
                 $fs->mkdir($cacheDir, 0777);
             } else {
                 $finder = new Finder();
-                $files = $finder->in($cacheDir . '/')->files();
+                $files = $finder->in($cacheDir.'/')->files();
                 if ($files->count() === 3) {
                     $iterator = $finder->getIterator();
                     $iterator->rewind();
@@ -99,21 +100,20 @@ class MediaProvider extends BaseProvider
                     }
                     $file = new File($iterator->current());
                     $fs->copy($file->getRealPath(), sys_get_temp_dir().'/'.$file->getFilename());
+
                     return new File(sys_get_temp_dir().'/'.$file->getFilename());
                 }
             }
         }
-        return null;
     }
 
     protected function storeInCache($dimensions, File $file)
     {
         $fs = new Filesystem();
-        $cacheDir = $_SERVER['HOME'] . '/.symfony/media/' . $dimensions['w'] . '-' . $dimensions['h'];
+        $cacheDir = $_SERVER['HOME'].'/.symfony/media/'.$dimensions['w'].'-'.$dimensions['h'];
         if (!$fs->exists($cacheDir)) {
             $fs->mkdir($cacheDir, 0777);
         }
-        $fs->copy($file->getRealPath(), $cacheDir . '/' . $file->getFilename());
+        $fs->copy($file->getRealPath(), $cacheDir.'/'.$file->getFilename());
     }
-
 }
