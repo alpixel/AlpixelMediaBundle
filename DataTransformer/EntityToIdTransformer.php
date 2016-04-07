@@ -50,6 +50,9 @@ class EntityToIdTransformer implements DataTransformerInterface
             return $this->transformSingleEntity($data);
         }
 
+        if (is_array($data))
+            return $data;
+
         $return = [];
         $data = explode('#&#', $data);
 
