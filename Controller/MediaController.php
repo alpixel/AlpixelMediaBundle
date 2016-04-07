@@ -17,7 +17,9 @@ class MediaController extends Controller
      * @Route("/media/upload/wysiwyg", name="upload_wysiwyg")
      *
      * @Method({"POST"})
+     *
      * @param Request $request
+     *
      * @return Response
      */
     public function uploadFilesWysiwygAction(Request $request)
@@ -37,7 +39,9 @@ class MediaController extends Controller
      * @Route("/media/upload", name="upload")
      *
      * @Method({"POST"})
+     *
      * @param Request $request
+     *
      * @return JsonResponse
      */
     public function uploadAction(Request $request)
@@ -61,7 +65,7 @@ class MediaController extends Controller
                 $media = $this->get('alpixel_media.manager')->upload($file, $request->get('folder'), $lifetime);
                 $path = $mediaPreview->generatePathFromSecretKey($media->getSecretKey());
                 $returnData[] = [
-                    'id' => $media->getSecretKey(),
+                    'id'   => $media->getSecretKey(),
                     'path' => $path,
                     'name' => $media->getName(),
                 ];
@@ -83,7 +87,7 @@ class MediaController extends Controller
         $response = new Response();
         $response->setContent(file_get_contents($this->get('alpixel_media.manager')->getAbsolutePath($media)));
         $response->headers->set('Content-Type', 'application/force-download');
-        $response->headers->set('Content-disposition', 'filename=' . $media->getName());
+        $response->headers->set('Content-disposition', 'filename='.$media->getName());
 
         return $response;
     }
@@ -105,7 +109,7 @@ class MediaController extends Controller
         $isImage = @getimagesize($src);
 
         if ($isImage) {
-            $response->headers->set('Content-disposition', 'inline;filename=' . $media->getName());
+            $response->headers->set('Content-disposition', 'inline;filename='.$media->getName());
             if (!empty($filter) && $isImage) {
                 $src = $this->get('alpixel_media.manager')->getAbsolutePath($media, $filter);
                 $dataManager = $this->get('liip_imagine.data.manager'); // the data manager service
@@ -114,11 +118,11 @@ class MediaController extends Controller
 
                 if (!is_file($src)) {
                     $fs = new Filesystem();
-                    if (!$fs->exists($uploadDir . $media->getFolder())) {
-                        $fs->mkdir($uploadDir . $media->getFolder());
+                    if (!$fs->exists($uploadDir.$media->getFolder())) {
+                        $fs->mkdir($uploadDir.$media->getFolder());
                     }
 
-                    $path = 'upload/' . $media->getUri();
+                    $path = 'upload/'.$media->getUri();
 
                     // find the image and determine its type
                     $image = $dataManager->find($filter, $path);
@@ -126,7 +130,7 @@ class MediaController extends Controller
                     // run the filter
                     $responseData = $filterManager->applyFilter($image, $filter);
                     $data = $responseData->getContent();
-                    file_put_contents($uploadDir . $media->getUri(), $data);
+                    file_put_contents($uploadDir.$media->getUri(), $data);
                 } else {
                     $data = file_get_contents($src);
                     $lastModified->setTimestamp(filemtime($src));
@@ -139,7 +143,7 @@ class MediaController extends Controller
         } else {
             $lastModified->setTimestamp(filemtime($src));
             $data = file_get_contents($src);
-            $response->headers->set('Content-disposition', 'attachment;filename=' . basename($media->getUri()));
+            $response->headers->set('Content-disposition', 'attachment;filename='.basename($media->getUri()));
         }
 
         $response->setLastModified($lastModified);
