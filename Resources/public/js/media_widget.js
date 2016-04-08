@@ -121,7 +121,7 @@
                 refreshDropzoneValue(resultInput, uploadedFiles);
 
                 /* Show clickable button only if file length < to the maxFile limit */
-                showHideDropzoneButton(mediaDropzone.files.length,mediaDropzone.options.maxFiles);
+                showHideDropzoneButton(dropzoneId, mediaDropzone.files.length,mediaDropzone.options.maxFiles);
 
                 /* Show uploaded img : pdf or img */
                 if(response[0].path) {
@@ -146,7 +146,7 @@
             .on("complete", function(file, response)
             {
                 /* Show clickable button only if file length < to the maxFile limit */
-                showHideDropzoneButton(mediaDropzone.files.length,mediaDropzone.options.maxFiles);
+                showHideDropzoneButton(dropzoneId, mediaDropzone.files.length,mediaDropzone.options.maxFiles);
 
                 /* Show submit button when uploading is finished */
                 $('form .form-actions').show();
@@ -186,7 +186,7 @@
             .on("removedfile", function(file)
             {
                 /* Show clickable button only if file length < to the maxFile limit */
-                showHideDropzoneButton(mediaDropzone.files.length,mediaDropzone.options.maxFiles);
+                showHideDropzoneButton(dropzoneId, mediaDropzone.files.length,mediaDropzone.options.maxFiles);
             });
         });
     });
