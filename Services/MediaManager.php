@@ -73,9 +73,9 @@ class MediaManager
         // Sanitizing the filename
         $slugify = new Slugify();
         if ($file instanceof UploadedFile) {
-            $filename = $slugify->slugify($file->getClientOriginalName());
+            $filename = $slugify->slugify(basename($file->getClientOriginalName(), $file->getExtension())).'.'.$file->getExtension();
         } else {
-            $filename = $slugify->slugify($file->getFilename());
+            $filename = $slugify->slugify(basename($file->getFilename(), $file->getExtension())).'.'.$file->getExtension();
         }
 
         // A media can have a lifetime and will be deleted with the cleanup function
@@ -85,7 +85,8 @@ class MediaManager
 
         // Checking for a media with the same name
         $mediaExists = $this->entityManager->getRepository('AlpixelMediaBundle:Media')->findOneByUri($dest_folder.$filename);
-        if (count($mediaExists) === 0) {
+        $mediaExists = (count($mediaExists) > 0);
+        if ($mediaExists === false) {
             $mediaExists = $fs->exists($this->uploadDir.$dest_folder.$filename);
         }
 
@@ -95,15 +96,18 @@ class MediaManager
             $extension = $file->guessExtension();
         }
 
-        if (count($mediaExists) > 0) {
+        if ($mediaExists === true){
             $filename = basename($filename, '.'.$extension);
-
             $i = 1;
             do {
                 $media->setName($filename.'-'.$i++.'.'.$extension);
                 $media->setUri($dest_folder.$media->getName());
                 $mediaExists = $this->entityManager->getRepository('AlpixelMediaBundle:Media')->findOneByUri($media->getUri());
-            } while (count($mediaExists) > 0);
+                $mediaExists = (count($mediaExists) > 0);
+                if ($mediaExists === false) {
+                    $mediaExists = $fs->exists($this->uploadDir.$dest_folder.$filename);
+                }
+            } while ($mediaExists === true);
         } else {
             $media->setName($filename.'.'.$extension);
             $media->setUri($dest_folder.$media->getName());
