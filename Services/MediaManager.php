@@ -33,7 +33,7 @@ class MediaManager
     {
         $this->entityManager = $entityManager;
         if (substr($uploadDir, -1) !== '/') {
-            $uploadDir = $uploadDir.'/';
+            $uploadDir = $uploadDir . '/';
         }
         $this->uploadDir = $uploadDir;
         $this->allowedMimetypes = $allowedMimetypes;
@@ -47,23 +47,23 @@ class MediaManager
     public function upload(File $file, $dest_folder = '', \DateTime $lifetime = null)
     {
         //preparing dir name
-        $dest_folder = date('Ymd').'/'.date('G').'/'.$dest_folder;
+        $dest_folder = date('Ymd') . '/' . date('G') . '/' . $dest_folder;
 
         //checking mimetypes
         $mimeTypePassed = false;
         foreach ($this->allowedMimetypes as $mimeType) {
-            if (preg_match('@'.$mimeType.'@', $file->getMimeType())) {
+            if (preg_match('@' . $mimeType . '@', $file->getMimeType())) {
                 $mimeTypePassed = true;
             }
         }
 
         if (!$mimeTypePassed) {
-            throw new InvalidMimeTypeException('Only following filetypes are allowed : '.implode(', ', $this->allowedMimetypes));
+            throw new InvalidMimeTypeException('Only following filetypes are allowed : ' . implode(', ', $this->allowedMimetypes));
         }
 
         $fs = new Filesystem();
-        if (!$fs->exists($this->uploadDir.$dest_folder)) {
-            $fs->mkdir($this->uploadDir.$dest_folder);
+        if (!$fs->exists($this->uploadDir . $dest_folder)) {
+            $fs->mkdir($this->uploadDir . $dest_folder);
         }
 
         $em = $this->entityManager;
@@ -73,9 +73,9 @@ class MediaManager
         // Sanitizing the filename
         $slugify = new Slugify();
         if ($file instanceof UploadedFile) {
-            $filename = $slugify->slugify(basename($file->getClientOriginalName(), $file->getExtension())).'.'.$file->getExtension();
+            $filename = $slugify->slugify(basename($file->getClientOriginalName(), $file->getExtension())) . '.' . $file->getExtension();
         } else {
-            $filename = $slugify->slugify(basename($file->getFilename(), $file->getExtension())).'.'.$file->getExtension();
+            $filename = $slugify->slugify(basename($file->getFilename(), $file->getExtension())) . '.' . $file->getExtension();
         }
 
         // A media can have a lifetime and will be deleted with the cleanup function
@@ -84,10 +84,10 @@ class MediaManager
         }
 
         // Checking for a media with the same name
-        $mediaExists = $this->entityManager->getRepository('AlpixelMediaBundle:Media')->findOneByUri($dest_folder.$filename);
+        $mediaExists = $this->entityManager->getRepository('AlpixelMediaBundle:Media')->findOneByUri($dest_folder . $filename);
         $mediaExists = (count($mediaExists) > 0);
         if ($mediaExists === false) {
-            $mediaExists = $fs->exists($this->uploadDir.$dest_folder.$filename);
+            $mediaExists = $fs->exists($this->uploadDir . $dest_folder . $filename);
         }
 
         // If there's one, we try to generate a new name
@@ -96,29 +96,29 @@ class MediaManager
             $extension = $file->guessExtension();
         }
 
-        if ($mediaExists === true){
-            $filename = basename($filename, '.'.$extension);
+        if ($mediaExists === true) {
+            $filename = basename($filename, '.' . $extension);
             $i = 1;
             do {
-                $media->setName($filename.'-'.$i++.'.'.$extension);
-                $media->setUri($dest_folder.$media->getName());
+                $media->setName($filename . '-' . $i++ . '.' . $extension);
+                $media->setUri($dest_folder . $media->getName());
                 $mediaExists = $this->entityManager->getRepository('AlpixelMediaBundle:Media')->findOneByUri($media->getUri());
                 $mediaExists = (count($mediaExists) > 0);
                 if ($mediaExists === false) {
-                    $mediaExists = $fs->exists($this->uploadDir.$dest_folder.$filename);
+                    $mediaExists = $fs->exists($this->uploadDir . $dest_folder . $filename);
                 }
             } while ($mediaExists === true);
         } else {
             $media->setName($filename);
-            $media->setUri($dest_folder.$media->getName());
+            $media->setUri($dest_folder . $media->getName());
         }
 
-        $file->move($this->uploadDir.$dest_folder, $media->getName());
-        chmod($this->uploadDir.$dest_folder.$media->getName(), 0664);
+        $file->move($this->uploadDir . $dest_folder, $media->getName());
+        chmod($this->uploadDir . $dest_folder . $media->getName(), 0664);
 
         // Getting the salt defined in parameters.yml
         $secret = $this->container->getParameter('secret');
-        $media->setSecretKey(hash('sha256', $secret.$media->getName().$media->getUri()));
+        $media->setSecretKey(hash('sha256', $secret . $media->getName() . $media->getUri()));
 
         $em->persist($media);
         $em->flush();
@@ -134,12 +134,12 @@ class MediaManager
         }
     }
 
-    public function delete(Media $media)
+    public function delete(Media $media, $flush = true)
     {
         $em = $this->entityManager;
         $fs = new Filesystem();
 
-        $file_path = $this->uploadDir.$media->getUri();
+        $file_path = $this->uploadDir . $media->getUri();
 
         try {
             $file = new File($file_path);
@@ -151,13 +151,15 @@ class MediaManager
         }
 
         $em->remove($media);
-        $em->flush();
+        if ($flush) {
+            $em->flush();
+        }
     }
 
     public function getUploadDir($filter = null)
     {
         if (!empty($filter)) {
-            return $this->uploadDir.'filters/'.$filter.'/';
+            return $this->uploadDir . 'filters/' . $filter . '/';
         }
 
         return $this->uploadDir;
@@ -166,27 +168,27 @@ class MediaManager
     public function getWebPath(Media $media)
     {
         $request = $this->container->get('request');
-        $dir = $request->getSchemeAndHttpHost().$request->getBaseUrl().'/';
+        $dir = $request->getSchemeAndHttpHost() . $request->getBaseUrl() . '/';
 
-        return $dir.$media->getUri();
+        return $dir . $media->getUri();
     }
 
     public function getAbsolutePath(Media $media, $filter = null)
     {
         $imgSrc = $this->uploadDir;
         if (!empty($filter)) {
-            return $imgSrc.'filters/'.$filter.'/'.$media->getUri();
+            return $imgSrc . 'filters/' . $filter . '/' . $media->getUri();
         } else {
-            return $imgSrc.$media->getUri();
+            return $imgSrc . $media->getUri();
         }
     }
 
     public function generateUrl(Media $media, $options)
     {
         $defaultOptions = [
-            'public'   => true,
-            'action'   => 'show',
-            'filter'   => null,
+            'public' => true,
+            'action' => 'show',
+            'filter' => null,
             'absolute' => false,
         ];
 
