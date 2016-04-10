@@ -109,7 +109,7 @@ class MediaManager
                 }
             } while ($mediaExists === true);
         } else {
-            $media->setName($filename.'.'.$extension);
+            $media->setName($filename);
             $media->setUri($dest_folder.$media->getName());
         }
 
