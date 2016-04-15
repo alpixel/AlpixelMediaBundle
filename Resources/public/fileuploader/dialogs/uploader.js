@@ -32,12 +32,22 @@ CKEDITOR.dialog.add('uploaderDialog', function (editor) {
             },
         ],
         onShow: function () {
-            ALPIXEL_CKEDITOR_URL_UPLOAD = '';
+            var ALPIXEL_CKEDITOR_UPLOAD = {};
         },
         onOk: function () {
-            var img = editor.document.createElement('img');
-            img.setAttribute('src', ALPIXEL_CKEDITOR_URL_UPLOAD);
-            editor.insertElement(img);
+            var isMimeType = /^image\//g;
+            var testMatch = isMimeType.test(ALPIXEL_CKEDITOR_UPLOAD.mime);
+            if (testMatch) {
+                var img = editor.document.createElement('img');
+                img.setAttribute('src', ALPIXEL_CKEDITOR_UPLOAD.url);
+                editor.insertElement(img);
+                console.log('coucou');
+            } else if (ALPIXEL_CKEDITOR_UPLOAD.name != undefined) {
+                console.log('coucou2');
+                var p = editor.document.createElement('p');
+                p.appendHtml("<a href='" + ALPIXEL_CKEDITOR_UPLOAD.url + "'>Lien vers le fichier " + ALPIXEL_CKEDITOR_UPLOAD.name + "</a>");
+                editor.insertElement(p);
+            }
         }
     };
 });

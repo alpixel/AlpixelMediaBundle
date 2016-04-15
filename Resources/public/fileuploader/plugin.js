@@ -12,10 +12,14 @@ CKEDITOR.plugins.add('fileuploader', {
 });
 
 // Without this global variable we can't pass url to editor
-var ALPIXEL_CKEDITOR_URL_UPLOAD = '';
+var ALPIXEL_CKEDITOR_UPLOAD = {};
 
 // Callback function triggered by javascript content from response ajax
-var uploadedFile = CKEDITOR.tools.addFunction(function (url) {
-    ALPIXEL_CKEDITOR_URL_UPLOAD = url;
+var uploadedFile = CKEDITOR.tools.addFunction(function (url, mime, name) {
+    ALPIXEL_CKEDITOR_UPLOAD = {
+        url: url,
+        name: name,
+        mime: mime
+    };
     $(document).trigger('media-wysiwyg-uploaded');
 });

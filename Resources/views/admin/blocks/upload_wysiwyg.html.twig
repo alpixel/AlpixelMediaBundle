@@ -1,7 +1,6 @@
 {% if error is not defined %}
-    <img src="{{ file_uploaded|media_url({'filter': 'admin'}) }}" data-source="{{ file_uploaded|media_url }}" alt=""/>
     <script type="text/javascript">
-        window.parent.CKEDITOR.tools.callFunction(0, "{{ file_uploaded|media_url }}");
+        window.parent.CKEDITOR.tools.callFunction(0, "{{ file_uploaded|media_url }}", "{{ file_uploaded.mime }}", "{{ file_uploaded.name }}");
     </script>
 {% else %}
     <script type="text/javascript">
