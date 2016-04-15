@@ -3,7 +3,7 @@ CKEDITOR.plugins.add( 'fileuploader', {
     init: function( editor ) {
         editor.addCommand( 'uploader-cmd', new CKEDITOR.dialogCommand('uploaderDialog') );
         editor.ui.addButton( 'Uploader', {
-            label: 'Upload your files',
+            label: 'Téléchargez un fichier (image, PDF, ..)',
             command: 'uploader-cmd'
         });
 
@@ -17,4 +17,5 @@ var ALPIXEL_CKEDITOR_URL_UPLOAD = '';
 // Callback function triggered by javascript content from response ajax
 var uploadedFile = CKEDITOR.tools.addFunction( function(url) {
     ALPIXEL_CKEDITOR_URL_UPLOAD = url;
+    $(document).trigger('media-wysiwyg-uploaded');
 } );
