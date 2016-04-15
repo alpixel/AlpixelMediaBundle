@@ -26,7 +26,6 @@ CKEDITOR.dialog.add('uploaderDialog', function (editor) {
             },
         ],
         onOk: function () {
-            var dialog = this;
             var img = editor.document.createElement('img');
 
             img.setAttribute('src', ALPIXEL_CKEDITOR_URL_UPLOAD);
