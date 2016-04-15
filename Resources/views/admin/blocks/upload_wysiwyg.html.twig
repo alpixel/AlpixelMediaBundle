@@ -1,4 +1,4 @@
-{{ file_uploaded }}
+<img src="{{ file_uploaded|media_url({'filter': 'admin'}) }}" data-source="{{ file_uploaded|media_url }}" alt="" />
 <script type="text/javascript">
-    window.parent.CKEDITOR.tools.callFunction(0, "{{ file_uploaded }}");
+    window.parent.CKEDITOR.tools.callFunction(0, "{{ file_uploaded|media_url }}");
 </script>

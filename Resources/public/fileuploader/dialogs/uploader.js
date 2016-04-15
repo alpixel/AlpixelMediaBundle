@@ -1,6 +1,6 @@
 CKEDITOR.dialog.add( 'uploaderDialog', function ( editor ) {
     return {
-        title: 'Upload manager',
+        title: 'Gestionnaire de téléchargement',
         minWidth: 800,
         minHeight: 400,
         contents: [
@@ -11,7 +11,7 @@ CKEDITOR.dialog.add( 'uploaderDialog', function ( editor ) {
                     {
                         type:   'file',
                         id:     'upload',
-                        label:  'Séléctionner un fichier (Veuillez attendre la fin du téléchargement avant de cliquer sur OK)',
+                        label:  'Sélectionner un fichier',
                         size:   38,
                         // filebrowserUploadUrl From Symfony app/config.yml
                         action: editor.ui.editor.config.filebrowserUploadUrl,
