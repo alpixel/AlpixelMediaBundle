@@ -7,6 +7,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpFoundation\File\Exception\UploadException;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -27,12 +29,17 @@ class MediaController extends Controller
         $template = 'AlpixelMediaBundle:admin:blocks/upload_wysiwyg.html.twig';
 
         try {
-            foreach ($request->files as $file) {
+            $file = $request->files->get("upload");
+            if ($file !== null) {
                 $media = $this->get('alpixel_media.manager')->upload($file, $request->get('folder'), null);
+                return $this->render($template, [
+                    'file_uploaded' => $media,
+                ]);
+            } else {
+                if (empty($_FILES) && empty($_POST) && isset($_SERVER['REQUEST_METHOD']) && strtolower($_SERVER['REQUEST_METHOD']) == 'post') {
+                    throw new UploadException(sprintf("Votre fichier dépasse la limite maximale de %s", ini_get('post_max_size')));
+                }
             }
-            return $this->render($template, [
-                'file_uploaded' => $media,
-            ]);
         } catch (\Exception $e) {
             return $this->render($template, [
                 'error' => $e->getMessage()
