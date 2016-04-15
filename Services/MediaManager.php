@@ -48,7 +48,7 @@ class MediaManager
     public function upload(File $file, $dest_folder = '', \DateTime $lifetime = null)
     {
         if ($file instanceof UploadedFile) {
-            if ($file->getError() !== null) {
+            if ($file->getError() !== null && $file->getError() !== 0) {
                 throw new UploadException($file->getErrorMessage());
             }
         }
