@@ -1,8 +1,8 @@
 CKEDITOR.dialog.add('uploaderDialog', function (editor) {
     return {
         title: 'Gestionnaire de téléchargement',
-        minWidth: 800,
-        minHeight: 400,
+        minWidth: 300,
+        minHeight: 150,
         contents: [
             {
                 id: 'tab-basic',
@@ -19,23 +19,39 @@ CKEDITOR.dialog.add('uploaderDialog', function (editor) {
                     {
                         type: 'fileButton',
                         id: 'fileId',
-                        label: 'Upload',
-                        'for': ['tab-basic', 'upload']
+                        class: 'cke_dialog_ui_button cke_dialog_ui_button_ok',
+                        label: 'Envoyer le fichier',
+                        labelStyle: 'color: #fff',
+                        'for': ['tab-basic', 'upload'],
+                        onClick: function () {
+                            var ckDialog = window.CKEDITOR.dialog.getCurrent();
+                            ckDialog.setState(CKEDITOR.DIALOG_STATE_BUSY);
+                        }
                     }
                 ]
             },
         ],
+        onShow: function () {
+            ALPIXEL_CKEDITOR_URL_UPLOAD = '';
+        },
         onOk: function () {
             var img = editor.document.createElement('img');
-
             img.setAttribute('src', ALPIXEL_CKEDITOR_URL_UPLOAD);
             editor.insertElement(img);
         }
     };
 });
 
+function uploadingError(error) {
+    var ckDialog = window.CKEDITOR.dialog.getCurrent();
+    ckDialog.setState(CKEDITOR.DIALOG_STATE_IDLE);
+    ckDialog._.buttons['cancel'].click();
+    alert(error);
+};
+
 $(document).on('media-wysiwyg-uploaded', function () {
     var ckDialog = window.CKEDITOR.dialog.getCurrent();
+    ckDialog.setState(CKEDITOR.DIALOG_STATE_IDLE);
     var ckOk = ckDialog._.buttons['ok'];
     ckOk.click();
 });

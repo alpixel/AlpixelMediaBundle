@@ -10,6 +10,7 @@ use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException;
+use Symfony\Component\HttpFoundation\File\Exception\UploadException;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Routing\Generator\UrlGenerator;
@@ -46,6 +47,12 @@ class MediaManager
      **/
     public function upload(File $file, $dest_folder = '', \DateTime $lifetime = null)
     {
+        if ($file instanceof UploadedFile) {
+            if ($file->getError() !== null) {
+                throw new UploadException($file->getErrorMessage());
+            }
+        }
+
         //preparing dir name
         $dest_folder = date('Ymd') . '/' . date('G') . '/' . $dest_folder;
 
