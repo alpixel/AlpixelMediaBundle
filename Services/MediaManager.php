@@ -70,12 +70,24 @@ class MediaManager
         $media = new Media();
         $media->setMime($file->getMimeType());
 
+        // If there's one, we try to generate a new name
+        $extension = $file->getExtension();
+
         // Sanitizing the filename
         $slugify = new Slugify();
         if ($file instanceof UploadedFile) {
-            $filename = $slugify->slugify(basename($file->getClientOriginalName(), $file->getExtension())) . '.' . $file->getExtension();
+            if (empty($extension)) {
+                $extension = $file->getClientOriginalExtension();
+                if (empty($extension)) {
+                    $extension = $file->guessClientExtension();
+                }
+            }
+            $filename = $slugify->slugify(basename($file->getClientOriginalName(), $extension)) . '.' . $extension;
         } else {
-            $filename = $slugify->slugify(basename($file->getFilename(), $file->getExtension())) . '.' . $file->getExtension();
+            if (empty($extension)) {
+                $extension = $file->guessClientExtension();
+            }
+            $filename = $slugify->slugify(basename($file->getFilename(), $extension)) . '.' . $extension;
         }
 
         // A media can have a lifetime and will be deleted with the cleanup function
@@ -88,12 +100,6 @@ class MediaManager
         $mediaExists = (count($mediaExists) > 0);
         if ($mediaExists === false) {
             $mediaExists = $fs->exists($this->uploadDir . $dest_folder . $filename);
-        }
-
-        // If there's one, we try to generate a new name
-        $extension = $file->getExtension();
-        if (empty($extension)) {
-            $extension = $file->guessExtension();
         }
 
         if ($mediaExists === true) {
