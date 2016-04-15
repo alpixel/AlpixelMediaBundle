@@ -14,12 +14,8 @@
         // Re-write the saved input value
         function refreshDropzoneValue(resultInput, uploadedFiles) {
 
-              console.log('Input avant >>> '+resultInput.val());
-
               // uploadedFiles is an array, so we use .join method to convert array key to string, with a tag separator #&#
               resultInput.val(uploadedFiles.join('#&#'));
-
-              console.log('Input après >>> '+resultInput.val());
         }
 
 
