@@ -1,14 +1,4 @@
 (function ($) {
-    // // Save info in sessionStorage if Zones exists in CMS page
-    // function saveSessionStorage(id,values) {
-    //     sessionStorage.setItem(id, values);
-    // }
-
-    // // Save info in sessionStorage if Zones exists in CMS page
-    // function removeSessionStorage(id) {
-    //     sessionStorage.removeItem(id);
-    // }
-
     // Show or hide "Ajouter une nouvelle image" if current number of image is inferior to the max file limit
     function showHideDropzoneButton(id, nb, max) {
         if (nb < max) {
@@ -100,16 +90,6 @@
 
                           // Complete the uploadedFiles with existing files for the resultInput
                           uploadedFiles.push(key);
-
-                          // Save values in sessionStorage if a.sonata-ba-action exists = Zones in CMS
-                          // if($('a.sonata-ba-action').length) {
-                          //   var arrayValues = {
-                          //     'input' : ''+key+'',
-                          //     'img' : ''+$(this).attr('src')+''
-                          //   };
-                          //   saveSessionStorage(dropzoneId,  JSON.stringify(arrayValues));
-                          // }
-
                       });
 
                       // Show all the remove button above existing images
@@ -161,15 +141,6 @@
 
                       // Refresh input value
                       refreshDropzoneValue(resultInput, uploadedFiles);
-
-                      // Save values in sessionStorage if a.sonata-ba-action exists = Zones in CMS
-                      // if($('a.sonata-ba-action').length) {
-                      //   var arrayValues = {
-                      //     'input' : ''+newFile+'',
-                      //     'img' : ''+response[0].path+''
-                      //   };
-                      //   saveSessionStorage(dropzoneId,  JSON.stringify(arrayValues));
-                      // }
                   })
 
                   .on("removedfile", function (file) {
@@ -191,11 +162,6 @@
 
                       // Show clickable button only if file length < to the maxFile limit
                       showHideDropzoneButton(dropzoneId, $this.files.length, $this.options.maxFiles);
-
-                      // Delete values in sessionStorage if a.sonata-ba-action exists = Zones in CMS
-                      // if($('a.sonata-ba-action').length) {
-                      //     removeSessionStorage(dropzoneId);
-                      // }
                   })
 
                   .on("complete", function (file) {
