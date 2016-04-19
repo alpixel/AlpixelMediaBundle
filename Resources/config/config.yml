@@ -1,0 +1,4 @@
+twig:
+    form:
+        resources:
+            - 'AlpixelMediaBundle:Form:fields.html.twig'
