@@ -93,8 +93,11 @@ class MediaController extends Controller
      * @Route("/media/download/{secretKey}/{filter}", name="media_download_private")
      *
      * @Method({"GET"})
+     * @param Media $media
+     * @param string $filter
+     * @return Response
      */
-    public function downloadMediaAction(Media $media)
+    public function downloadMediaAction(Media $media, $filter = null)
     {
         $response = new Response();
         $response->setContent(file_get_contents($this->get('alpixel_media.manager')->getAbsolutePath($media)));
