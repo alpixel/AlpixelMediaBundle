@@ -168,7 +168,6 @@ class MediaManager
                 try {
                     $fs->remove($file);
                     $expired++;
-                    print 'media deleted';
                 } catch (IOException $e) {
                 }
             }
