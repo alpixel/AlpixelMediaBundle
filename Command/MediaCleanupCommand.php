@@ -22,10 +22,11 @@ class MediaCleanupCommand extends ContainerAwareCommand
     {
         $container = $this->getContainer();
 
-        $medias = $container->get('doctrine.orm.entity_manager')
-                            ->getRepository('AlpixelMediaBundle:Media')
-                            ->findExpiredMedias();
-        $container->get('alpixel_media.manager')->cleanup();
-        $output->writeln(sprintf('%s medias deleted', count($medias)));
+        $container->get('doctrine.orm.entity_manager')
+                  ->getRepository('AlpixelMediaBundle:Media')
+                  ->findExpiredMedias();
+
+        $medias = $container->get('alpixel_media.manager')->cleanup();
+        $output->writeln(sprintf('%s medias deleted', $medias));
     }
 }
