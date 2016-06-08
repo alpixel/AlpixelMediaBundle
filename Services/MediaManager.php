@@ -9,6 +9,7 @@ use Doctrine\ORM\EntityManager;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException;
 use Symfony\Component\HttpFoundation\File\Exception\UploadException;
 use Symfony\Component\HttpFoundation\File\File;
@@ -139,12 +140,40 @@ class MediaManager
         return $media;
     }
 
+    /**
+     * @return int
+     */
     public function cleanup()
     {
-        $medias = $this->entityManager->getRepository('AlpixelMediaBundle:Media')->findExpiredMedias();
+        $expired = 0;
+
+        $mediaRepo = $this->entityManager->getRepository('AlpixelMediaBundle:Media');
+
+        //Cleanup expired files
+        $medias = $mediaRepo->findExpiredMedias();
+        $expired += count($medias);
         foreach ($medias as $media) {
             $this->delete($media);
         }
+
+        //Cleanup files without any database record
+        $fs = new Filesystem();
+        $finder = new Finder();
+        $files = $finder->in($this->uploadDir)->exclude('filters')->files();
+
+        foreach ($files as $file) {
+            $path = $file->getRelativePathname();
+            $media = $mediaRepo->findOneByUri($path);
+            if ($media === null) {
+                try {
+                    $fs->remove($file);
+                    $expired++;
+                } catch (IOException $e) {
+                }
+            }
+        }
+
+        return $expired;
     }
 
     public function delete(Media $media, $flush = true)
@@ -160,7 +189,6 @@ class MediaManager
                 $fs->remove($file_path);
             }
         } catch (FileNotFoundException $e) {
-        } catch (IOException $e) {
         }
 
         $em->remove($media);
@@ -199,9 +227,9 @@ class MediaManager
     public function generateUrl(Media $media, $options)
     {
         $defaultOptions = [
-            'public' => true,
-            'action' => 'show',
-            'filter' => null,
+            'public'   => true,
+            'action'   => 'show',
+            'filter'   => null,
             'absolute' => false,
         ];
 
