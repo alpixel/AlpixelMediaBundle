@@ -64,7 +64,7 @@ class MediaPreviewExtension extends \Twig_Extension
     protected function generatePath($isIcon, $str)
     {
         if ($isIcon === true) {
-            return $this->request->getSchemeAndHttpHost().$this->request->getBasePath().'/bundles/media/images/'.$str;
+            return $this->request->getSchemeAndHttpHost().$this->request->getBasePath().'/bundles/alpixelmedia/images/'.$str;
         }
 
         return $this->request->getSchemeAndHttpHost().$this->request->getBaseUrl().'/media/'.$str.'/admin';
