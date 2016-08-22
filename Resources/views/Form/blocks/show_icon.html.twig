@@ -1,5 +1,5 @@
 {% if icon is empty %}
-        <img src="{{link}}" data-key="{{secretKey}}" />
+        <img src="{{link}}" data-key="{{secretKey}}" data-label="{{ label }}" />
 {% else %}
-        <img src="{{link}}" data-key="{{secretKey}}" /><div id="preview-template" style="display: none;"></div>
+        <img src="{{link}}" data-key="{{secretKey}}" data-label="{{ label }}" /><div id="preview-template" style="display: none;"></div>
 {% endif %}

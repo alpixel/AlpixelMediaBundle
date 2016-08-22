@@ -37,7 +37,8 @@ class MediaPreviewExtension extends \Twig_Extension
 
         $mimeType = $this->getMimeType($secretKey);
         $icon = '';
-        $link = '';
+
+        $media = $this->entityManager->getRepository("AlpixelMediaBundle:Media")->findOneBySecretKey($secretKey);
 
         if (preg_match('/^image/', $mimeType) === 0) {
             $icon = $this->getIcon($mimeType);
@@ -49,6 +50,7 @@ class MediaPreviewExtension extends \Twig_Extension
         return $twig->render('AlpixelMediaBundle:Form:blocks/show_icon.html.twig', [
             'link'      => $link,
             'icon'      => $icon,
+            'label'     => $media->getName(),
             'secretKey' => $secretKey,
         ]);
     }

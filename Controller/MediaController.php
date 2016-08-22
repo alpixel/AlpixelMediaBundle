@@ -3,6 +3,7 @@
 namespace Alpixel\Bundle\MediaBundle\Controller;
 
 use Alpixel\Bundle\MediaBundle\Entity\Media;
+use Alpixel\Bundle\MediaBundle\Exception\InvalidMimeTypeException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -32,18 +33,30 @@ class MediaController extends Controller
             $file = $request->files->get("upload");
             if ($file !== null) {
                 $media = $this->get('alpixel_media.manager')->upload($file, $request->get('folder'), null);
-                return $this->render($template, [
-                    'file_uploaded' => $media,
-                ]);
+
+                return $this->render(
+                    $template,
+                    [
+                        'file_uploaded' => $media,
+                    ]
+                );
             } else {
-                if (empty($_FILES) && empty($_POST) && isset($_SERVER['REQUEST_METHOD']) && strtolower($_SERVER['REQUEST_METHOD']) == 'post') {
-                    throw new UploadException(sprintf("Votre fichier dépasse la limite maximale de %s", ini_get('post_max_size')));
+                if (empty($_FILES) && empty($_POST) && isset($_SERVER['REQUEST_METHOD']) && strtolower(
+                        $_SERVER['REQUEST_METHOD']
+                    ) == 'post'
+                ) {
+                    throw new UploadException(
+                        sprintf("Votre fichier dépasse la limite maximale de %s", ini_get('post_max_size'))
+                    );
                 }
             }
         } catch (\Exception $e) {
-            return $this->render($template, [
-                'error' => $e->getMessage()
-            ]);
+            return $this->render(
+                $template,
+                [
+                    'error' => $e->getMessage(),
+                ]
+            );
         }
     }
 
@@ -74,13 +87,28 @@ class MediaController extends Controller
                 $files = [$files];
             }
             foreach ($files as $file) {
-                $media = $this->get('alpixel_media.manager')->upload($file, $request->get('folder'), $lifetime);
-                $path = $mediaPreview->generatePathFromSecretKey($media->getSecretKey());
-                $returnData[] = [
-                    'id' => $media->getSecretKey(),
-                    'path' => $path,
-                    'name' => $media->getName(),
-                ];
+                /** @var UploadedFile $file */
+                try {
+                    $media = $this->get('alpixel_media.manager')->upload($file, $request->get('folder'), $lifetime);
+                    $path = $mediaPreview->generatePathFromSecretKey($media->getSecretKey());
+                    $returnData[] = [
+                        'id'    => $media->getSecretKey(),
+                        'path'  => $path,
+                        'name'  => $media->getName(),
+                        'error' => false,
+                    ];
+                } catch (InvalidMimeTypeException $e) {
+                    $returnData[] = [
+                        'name'         => $file->getClientOriginalName(),
+                        'error'        => true,
+                        'errorMessage' => $this->get('translator')->trans(
+                            "Le format de fichier %format% n'est pas autorisé",
+                            [
+                                '%format%' => $file->getClientMimeType(),
+                            ]
+                        ),
+                    ];
+                }
             }
         }
 
@@ -102,7 +130,7 @@ class MediaController extends Controller
         $response = new Response();
         $response->setContent(file_get_contents($this->get('alpixel_media.manager')->getAbsolutePath($media)));
         $response->headers->set('Content-Type', 'application/force-download');
-        $response->headers->set('Content-disposition', 'filename=' . $media->getName());
+        $response->headers->set('Content-disposition', 'filename='.$media->getName());
 
         return $response;
     }
@@ -124,7 +152,7 @@ class MediaController extends Controller
         $isImage = @getimagesize($src);
 
         if ($isImage) {
-            $response->headers->set('Content-disposition', 'inline;filename=' . $media->getName());
+            $response->headers->set('Content-disposition', 'inline;filename='.$media->getName());
             if (!empty($filter) && $isImage) {
                 $src = $this->get('alpixel_media.manager')->getAbsolutePath($media, $filter);
                 $dataManager = $this->get('liip_imagine.data.manager'); // the data manager service
@@ -133,11 +161,11 @@ class MediaController extends Controller
 
                 if (!is_file($src)) {
                     $fs = new Filesystem();
-                    if (!$fs->exists($uploadDir . $media->getFolder())) {
-                        $fs->mkdir($uploadDir . $media->getFolder());
+                    if (!$fs->exists($uploadDir.$media->getFolder())) {
+                        $fs->mkdir($uploadDir.$media->getFolder());
                     }
 
-                    $path = 'upload/' . $media->getUri();
+                    $path = 'upload/'.$media->getUri();
 
                     // find the image and determine its type
                     $image = $dataManager->find($filter, $path);
@@ -145,7 +173,7 @@ class MediaController extends Controller
                     // run the filter
                     $responseData = $filterManager->applyFilter($image, $filter);
                     $data = $responseData->getContent();
-                    file_put_contents($uploadDir . $media->getUri(), $data);
+                    file_put_contents($uploadDir.$media->getUri(), $data);
                 } else {
                     $data = file_get_contents($src);
                     $lastModified->setTimestamp(filemtime($src));
@@ -158,7 +186,7 @@ class MediaController extends Controller
         } else {
             $lastModified->setTimestamp(filemtime($src));
             $data = file_get_contents($src);
-            $response->headers->set('Content-disposition', 'attachment;filename=' . basename($media->getUri()));
+            $response->headers->set('Content-disposition', 'attachment;filename='.basename($media->getUri()));
         }
 
         $response->setLastModified($lastModified);

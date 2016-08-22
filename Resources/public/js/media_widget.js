@@ -91,6 +91,7 @@
 
                               // Set to the thumbnail container with the file ID in a data-rel attribut
                               mockFile.previewTemplate.setAttribute('data-rel', key);
+                              $(mockFile.previewElement).find('.dz-label').text($(this).attr('data-label'));
 
                               // Complete the uploadedFiles with existing files for the resultInput
                               uploadedFiles.push(key);
@@ -128,23 +129,38 @@
                       // -- @-@ --
                       $this
                       .on("success", function (file, response) {
-                          // Set to the thumbnail container with the file ID in a data-rel attribut
-                          file.previewElement.setAttribute('data-rel', response[0].id);
 
-                          // Hide progress bar
-                          $(file.previewElement).find('.dz-progress').hide();
+                          if(response[0]['error'] == false) {
+                              file['id'] = response[0].id;
 
-                          // Show remove button
-                          $(file.previewElement).find('.dz-remove').show();
+                              // Set to the thumbnail container with the file ID in a data-rel attribut
+                              file.previewElement.setAttribute('data-rel', response[0].id);
 
-                          // Create an array with the new uploaded file
-                          var newFile = [response[0].id];
+                              // Hide progress bar
+                              $(file.previewElement).find('.dz-progress').hide();
 
-                          // Merge new array with existing files
-                          $.merge(uploadedFiles, newFile);
+                              // Show remove button
+                              $(file.previewElement).find('.dz-remove').show();
 
-                          // Refresh input value
-                          refreshDropzoneValue(resultInput, uploadedFiles);
+                              // Create an array with the new uploaded file
+                              var newFile = [response[0].id];
+
+                              if (response[0]['path'] != undefined && $(file.previewElement).find('img').attr('src') == undefined) {
+                                  $(file.previewElement).find('img').attr('src', response[0]['path']);
+                              }
+
+                              if (response[0]['name'] != undefined) {
+                                  $(file.previewElement).find('.dz-label').text(response[0]['name']);
+                              }
+
+                              // Merge new array with existing files
+                              $.merge(uploadedFiles, newFile);
+
+                              // Refresh input value
+                              refreshDropzoneValue(resultInput, uploadedFiles);
+                          } else {
+                              Dropzone.forElement('div#' + dropzoneId).emit("error", file, response[0]['errorMessage']);
+                          }
                       })
 
                       .on("removedfile", function (file) {
@@ -189,7 +205,9 @@
                           $('div#' + dropzoneId).parent().find('.dz-clickable').hide();
                       })
 
-                      .on("error", function (file) {
+                      .on("error", function (file, message) {
+
+                          alert(message);
 
                           // Remove Preview file && cancel upload
                           $this.removeFile(file);
