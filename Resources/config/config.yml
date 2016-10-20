@@ -1,4 +1,3 @@
 twig:
-    form:
-        resources:
-            - 'AlpixelMediaBundle:Form:fields.html.twig'
+  form_themes:
+      - 'AlpixelMediaBundle:Form:fields.html.twig'
