@@ -41,9 +41,7 @@ CKEDITOR.dialog.add('uploaderDialog', function (editor) {
                 var img = editor.document.createElement('img');
                 img.setAttribute('src', ALPIXEL_CKEDITOR_UPLOAD.url);
                 editor.insertElement(img);
-                console.log('coucou');
             } else if (ALPIXEL_CKEDITOR_UPLOAD.name != undefined) {
-                console.log('coucou2');
                 var p = editor.document.createElement('p');
                 p.appendHtml("<a href='" + ALPIXEL_CKEDITOR_UPLOAD.url + "'>Lien vers le fichier " + ALPIXEL_CKEDITOR_UPLOAD.name + "</a>");
                 editor.insertElement(p);
