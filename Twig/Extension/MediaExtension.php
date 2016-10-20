@@ -19,6 +19,13 @@ class MediaExtension extends \Twig_Extension
         return 'alpixel_media';
     }
 
+    public function getFunctions()
+    {
+        return [
+            new \Twig_SimpleFunction('alpixel_media_allowed_mimetypes', [$this, 'getAllowedMimeTypes']),
+        ];
+    }
+
     public function getFilters()
     {
         return [
@@ -29,5 +36,10 @@ class MediaExtension extends \Twig_Extension
     public function generateMediaUrl(Media $media, $options = [])
     {
         return $this->mediaManager->generateUrl($media, $options);
+    }
+
+    public function getAllowedMimeTypes()
+    {
+        return $this->mediaManager->getAllowedMimeTypes();
     }
 }

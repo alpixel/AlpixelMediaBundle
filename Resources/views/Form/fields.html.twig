@@ -3,6 +3,9 @@
 {% block alpixel_dropzone_widget %}
     {% set dropzoneId =  form.vars.id %}
 
+    <script type="text/javascript">
+        var allowedMimeTypes = "{{ alpixel_media_allowed_mimetypes()|join(',') }}";
+    </script>
     <link rel="stylesheet" href="{{asset('bundles/alpixelmedia/css/media_widget.css')}}" />
     <script type="text/javascript" src="{{asset('bundles/alpixelmedia/js/dropzone.js')}}"></script>
     <script type="text/javascript" src="{{asset('bundles/alpixelmedia/js/media_widget.js')}}"></script>

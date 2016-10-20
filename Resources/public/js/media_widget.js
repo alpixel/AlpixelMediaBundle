@@ -44,7 +44,7 @@
                   parallelUploads: 1,
                   maxFilesize: 10,
                   clickable: 'p.add-' + dropzoneId,
-                  acceptedFiles: '.jpg, .png, .jpeg, .pdf, .doc, .docx, .xls, .xlsx',
+                  acceptedFiles: allowedMimeTypes,
                   addRemoveLinks: true,
                   dictDefaultMessage: '',
                   previewTemplate: $('div#' + dropzoneId).parent().find('.previewTemplateFileDrop').html(),
