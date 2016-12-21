@@ -131,6 +131,7 @@
                       .on("success", function (file, response) {
 
                           if(response[0]['error'] == false) {
+                              $('div#' + dropzoneId).trigger('alpixel_media.dropzone.upload.pre.success', file);
                               file['id'] = response[0].id;
 
                               // Set to the thumbnail container with the file ID in a data-rel attribut
@@ -158,7 +159,9 @@
 
                               // Refresh input value
                               refreshDropzoneValue(resultInput, uploadedFiles);
+                              $('div#' + dropzoneId).trigger('alpixel_media.dropzone.upload.post.success', file);
                           } else {
+                              $('div#' + dropzoneId).trigger('alpixel_media.dropzone.upload.error', file);
                               Dropzone.forElement('div#' + dropzoneId).emit("error", file, response[0]['errorMessage']);
                           }
                       })
