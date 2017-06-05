@@ -6,6 +6,7 @@ use Alpixel\Bundle\MediaBundle\Services\MediaManager;
 use Faker\Provider\Base as BaseProvider;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
+use Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException;
 use Symfony\Component\HttpFoundation\File\File;
 
 class MediaProvider extends BaseProvider
@@ -116,15 +117,17 @@ class MediaProvider extends BaseProvider
                 $finder = new Finder();
                 $files = $finder->in($cacheDir . '/')->files();
                 if (strrpos($key, "file-") !== false || $files->count() === 3) {
-                    $iterator = $finder->getIterator();
-                    $iterator->rewind();
-                    for ($i = 0; $i < rand(0, 2); $i++) {
-                        $iterator->next();
-                    }
-                    $file = new File($iterator->current());
-                    $fs->copy($file->getRealPath(), sys_get_temp_dir() . '/' . $file->getFilename());
+                    try {
+                        $iterator = $finder->getIterator();
+                        $iterator->rewind();
+                        for ($i = 0; $i < rand(0, 2); $i++) {
+                            $iterator->next();
+                        }
+                        $file = new File($iterator->current());
+                        $fs->copy($file->getRealPath(), sys_get_temp_dir() . '/' . $file->getFilename());
 
-                    return new File(sys_get_temp_dir() . '/' . $file->getFilename());
+                        return new File(sys_get_temp_dir() . '/' . $file->getFilename());
+                    } catch(FileNotFoundException $e) {}
                 }
             }
         }
