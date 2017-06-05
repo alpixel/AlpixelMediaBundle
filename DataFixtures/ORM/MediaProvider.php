@@ -17,17 +17,40 @@ class MediaProvider extends BaseProvider
         $this->mediaManager = $mediaManager;
     }
 
+    /** @deprecated */
     public function randomMedia($width = null, $height = null, $type = 'color')
+    {
+        return $this->randomImage($width, $height, $type);
+    }
+
+    public function randomImage($width = null, $height = null, $type = 'color')
     {
         do {
             $dimensions = $this->fetchDimensions($width, $height);
-            $file = $this->fetchFromCache($dimensions);
+            $file = $this->fetchFromCache($dimensions['w'] . '-' . $dimensions['h']);
             if ($file === null) {
-                $file = $this->downloadMedia($this->generateUrl($dimensions, $type));
-                $this->storeInCache($dimensions, $file);
+                $file = $this->downloadMedia($this->generateUrl($dimensions, $type), 'jpg');
+                $this->storeInCache($dimensions['w'] . '-' . $dimensions['h'], $file);
             }
         } while (!preg_match('@^image/@', $file->getMimeType()));
 
+        $media = $this->mediaManager->upload($file);
+
+        return $media;
+    }
+
+    public function randomFile($fileType)
+    {
+        $file = $this->fetchFromCache("file-" . $fileType);
+        if ($file === null) {
+            switch ($fileType) {
+                case "pdf":
+                default:
+                    $file = $this->downloadMedia("https://symfony.com/pdf/Symfony_book_master.pdf", $fileType);
+                    break;
+            }
+        }
+        $this->storeInCache("file-" . $fileType, $file);
         $media = $this->mediaManager->upload($file);
 
         return $media;
@@ -57,17 +80,17 @@ class MediaProvider extends BaseProvider
             $url .= 'g/';
         }
 
-        $url .= $dimensions['w'].'/'.$dimensions['h'];
+        $url .= $dimensions['w'] . '/' . $dimensions['h'];
 
         $category = ['abstract', 'city', 'nature', 'moutains'];
-        $url .= '/'.$category[array_rand($category, 1)].'/';
+        $url .= '/' . $category[array_rand($category, 1)] . '/';
 
         return $url;
     }
 
-    protected function downloadMedia($url)
+    protected function downloadMedia($url, $ext)
     {
-        $filepath = sys_get_temp_dir().'/'.uniqid().'.jpg';
+        $filepath = sys_get_temp_dir() . '/' . uniqid() . '.' . $ext;
         $ch = curl_init($url);
         $fp = fopen($filepath, 'wb');
         curl_setopt($ch, CURLOPT_FILE, $fp);
@@ -79,41 +102,41 @@ class MediaProvider extends BaseProvider
         return new File($filepath, 'random');
     }
 
-    protected function fetchFromCache($dimensions)
+    protected function fetchFromCache($key)
     {
         $fs = new Filesystem();
-        $cacheDir = $_SERVER['HOME'].'/.symfony/media';
+        $cacheDir = $_SERVER['HOME'] . '/.symfony/media';
         if (!$fs->exists($cacheDir)) {
             $fs->mkdir($cacheDir, 0777);
         } else {
-            $cacheDir .= '/'.$dimensions['w'].'-'.$dimensions['h'];
+            $cacheDir .= '/' . $key;
             if (!$fs->exists($cacheDir)) {
                 $fs->mkdir($cacheDir, 0777);
             } else {
                 $finder = new Finder();
-                $files = $finder->in($cacheDir.'/')->files();
-                if ($files->count() === 3) {
+                $files = $finder->in($cacheDir . '/')->files();
+                if (strrpos($key, "file-") !== false || $files->count() === 3) {
                     $iterator = $finder->getIterator();
                     $iterator->rewind();
                     for ($i = 0; $i < rand(0, 2); $i++) {
                         $iterator->next();
                     }
                     $file = new File($iterator->current());
-                    $fs->copy($file->getRealPath(), sys_get_temp_dir().'/'.$file->getFilename());
+                    $fs->copy($file->getRealPath(), sys_get_temp_dir() . '/' . $file->getFilename());
 
-                    return new File(sys_get_temp_dir().'/'.$file->getFilename());
+                    return new File(sys_get_temp_dir() . '/' . $file->getFilename());
                 }
             }
         }
     }
 
-    protected function storeInCache($dimensions, File $file)
+    protected function storeInCache($key, File $file)
     {
         $fs = new Filesystem();
-        $cacheDir = $_SERVER['HOME'].'/.symfony/media/'.$dimensions['w'].'-'.$dimensions['h'];
+        $cacheDir = $_SERVER['HOME'] . '/.symfony/media/' . $key;
         if (!$fs->exists($cacheDir)) {
             $fs->mkdir($cacheDir, 0777);
         }
-        $fs->copy($file->getRealPath(), $cacheDir.'/'.$file->getFilename());
+        $fs->copy($file->getRealPath(), $cacheDir . '/' . $file->getFilename());
     }
 }
