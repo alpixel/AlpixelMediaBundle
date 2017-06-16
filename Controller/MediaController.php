@@ -62,6 +62,7 @@ class MediaController extends Controller
 
     /**
      * @Route("/media/upload", name="upload")
+     * @Route("/media/upload/{uploadConfiguration}", name="upload_configuration")
      *
      * @Method({"POST"})
      *
@@ -69,7 +70,7 @@ class MediaController extends Controller
      *
      * @return JsonResponse
      */
-    public function uploadAction(Request $request)
+    public function uploadAction(Request $request, $uploadConfiguration = null)
     {
         $returnData = [];
 
@@ -81,6 +82,12 @@ class MediaController extends Controller
             $lifetime = new \DateTime('+6 hours');
         }
 
+        if ($uploadConfiguration !== null &&
+            !array_key_exists($uploadConfiguration, $this->getParameter("alpixel_media.upload_configurations"))
+        ) {
+            throw new \InvalidArgumentException();
+        }
+
         $mediaPreview = $this->get('twig.extension.media_preview_extension');
         foreach ($request->files as $files) {
             if (!is_array($files)) {
@@ -89,7 +96,13 @@ class MediaController extends Controller
             foreach ($files as $file) {
                 /** @var UploadedFile $file */
                 try {
-                    $media = $this->get('alpixel_media.manager')->upload($file, $request->get('folder'), $lifetime);
+                    $media = $this->get('alpixel_media.manager')->upload(
+                        $file,
+                        $request->get('folder'),
+                        $lifetime,
+                        $uploadConfiguration
+                    );
+
                     $path = $mediaPreview->generatePathFromSecretKey($media->getSecretKey());
                     $returnData[] = [
                         'id'    => $media->getSecretKey(),

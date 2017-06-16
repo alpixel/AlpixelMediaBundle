@@ -10,7 +10,7 @@ services:
         arguments:
           - "@doctrine.orm.entity_manager"
           - "%alpixel_media.upload_folder%"
-          - "%alpixel_media.allowed_mimetypes%"
+          - "%alpixel_media.upload_configurations%"
         calls:
           - [setContainer, ['@service_container']]
 
@@ -28,7 +28,10 @@ services:
 
     alpixel_media.type.alpixel_dropzone:
         class: Alpixel\Bundle\MediaBundle\Form\Type\AlpixelDropzoneType
-        arguments: ["@doctrine.orm.entity_manager", "@event_dispatcher"]
+        arguments:
+          - "@doctrine.orm.entity_manager"
+          - "@event_dispatcher"
+          - "%alpixel_media.upload_configurations%"
         tags:
             - { name: form.type, alias: 'alpixel_dropzone' }
 

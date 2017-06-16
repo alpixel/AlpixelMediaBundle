@@ -16,11 +16,17 @@ use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Routing\Generator\UrlGenerator;
 
+/**
+ * @author Benjamin HUBERT <benjamin@alpixel.fr>
+ */
 class MediaManager
 {
+    /**
+     * @var \Doctrine\ORM\EntityManager
+     */
     protected $entityManager;
     protected $uploadDir;
-    protected $allowedMimetypes;
+    protected $uploadConfiguration;
 
     use ContainerAwareTrait;
 
@@ -31,22 +37,25 @@ class MediaManager
     const OCTET_IN_TO = 4;
     const OCTET_IN_PO = 5;
 
-    public function __construct(EntityManager $entityManager, $uploadDir, $allowedMimetypes)
+    public function __construct(EntityManager $entityManager, $uploadDir, $uploadConfiguration)
     {
         $this->entityManager = $entityManager;
         if (substr($uploadDir, -1) !== '/') {
-            $uploadDir = $uploadDir . '/';
+            $uploadDir = $uploadDir.'/';
         }
         $this->uploadDir = $uploadDir;
-        $this->allowedMimetypes = $allowedMimetypes;
+        $this->uploadConfiguration = $uploadConfiguration;
     }
 
+
     /**
-     * $current_uri String actual uri of the file
-     * $dest_folder String future uri of the file starting from web/upload folder
-     * $lifetime DateTime lifetime of the file. If time goes over this limit, the file will be deleted.
-     **/
-    public function upload(File $file, $dest_folder = '', \DateTime $lifetime = null)
+     * @param \Symfony\Component\HttpFoundation\File\File $file
+     * @param string $dest_folder
+     * @param \DateTime|null $lifetime
+     * @param String $uploadConfiguration
+     * @return \Alpixel\Bundle\MediaBundle\Entity\Media
+     */
+    public function upload(File $file, $dest_folder = '', \DateTime $lifetime = null, $uploadConfiguration = null)
     {
         if ($file instanceof UploadedFile) {
             if ($file->getError() !== null && $file->getError() !== 0) {
@@ -55,23 +64,29 @@ class MediaManager
         }
 
         //preparing dir name
-        $dest_folder = date('Ymd') . '/' . date('G') . '/' . $dest_folder;
+        $dest_folder = date('Ymd').'/'.date('G').'/'.$dest_folder;
 
         //checking mimetypes
-        $mimeTypePassed = false;
-        foreach ($this->allowedMimetypes as $mimeType) {
-            if (preg_match('@' . $mimeType . '@', $file->getMimeType())) {
-                $mimeTypePassed = true;
+        if ($uploadConfiguration !== null) {
+            $allowedMimeTypes = $this->uploadConfiguration[$uploadConfiguration]['allowed_mimetypes'];
+
+            $mimeTypePassed = false;
+            foreach ($allowedMimeTypes as $mimeType) {
+                if (preg_match('@'.$mimeType.'@', $file->getMimeType())) {
+                    $mimeTypePassed = true;
+                }
+            }
+
+            if (!$mimeTypePassed) {
+                throw new InvalidMimeTypeException(
+                    'Only following filetypes are allowed : '.implode(', ', $allowedMimeTypes)
+                );
             }
         }
 
-        if (!$mimeTypePassed) {
-            throw new InvalidMimeTypeException('Only following filetypes are allowed : ' . implode(', ', $this->allowedMimetypes));
-        }
-
         $fs = new Filesystem();
-        if (!$fs->exists($this->uploadDir . $dest_folder)) {
-            $fs->mkdir($this->uploadDir . $dest_folder);
+        if (!$fs->exists($this->uploadDir.$dest_folder)) {
+            $fs->mkdir($this->uploadDir.$dest_folder);
         }
 
         $em = $this->entityManager;
@@ -90,12 +105,12 @@ class MediaManager
                     $extension = $file->guessClientExtension();
                 }
             }
-            $filename = $slugify->slugify(basename($file->getClientOriginalName(), $extension)) . '.' . $extension;
+            $filename = $slugify->slugify(basename($file->getClientOriginalName(), $extension)).'.'.$extension;
         } else {
             if (empty($extension)) {
                 $extension = $file->guessClientExtension();
             }
-            $filename = $slugify->slugify(basename($file->getFilename(), $extension)) . '.' . $extension;
+            $filename = $slugify->slugify(basename($file->getFilename(), $extension)).'.'.$extension;
         }
 
         // A media can have a lifetime and will be deleted with the cleanup function
@@ -104,35 +119,39 @@ class MediaManager
         }
 
         // Checking for a media with the same name
-        $mediaExists = $this->entityManager->getRepository('AlpixelMediaBundle:Media')->findOneByUri($dest_folder . $filename);
+        $mediaExists = $this->entityManager->getRepository('AlpixelMediaBundle:Media')->findOneByUri(
+            $dest_folder.$filename
+        );
         $mediaExists = (count($mediaExists) > 0);
         if ($mediaExists === false) {
-            $mediaExists = $fs->exists($this->uploadDir . $dest_folder . $filename);
+            $mediaExists = $fs->exists($this->uploadDir.$dest_folder.$filename);
         }
 
         if ($mediaExists === true) {
-            $filename = basename($filename, '.' . $extension);
+            $filename = basename($filename, '.'.$extension);
             $i = 1;
             do {
-                $media->setName($filename . '-' . $i++ . '.' . $extension);
-                $media->setUri($dest_folder . $media->getName());
-                $mediaExists = $this->entityManager->getRepository('AlpixelMediaBundle:Media')->findOneByUri($media->getUri());
+                $media->setName($filename.'-'.$i++.'.'.$extension);
+                $media->setUri($dest_folder.$media->getName());
+                $mediaExists = $this->entityManager->getRepository('AlpixelMediaBundle:Media')->findOneByUri(
+                    $media->getUri()
+                );
                 $mediaExists = (count($mediaExists) > 0);
                 if ($mediaExists === false) {
-                    $mediaExists = $fs->exists($this->uploadDir . $dest_folder . $filename);
+                    $mediaExists = $fs->exists($this->uploadDir.$dest_folder.$filename);
                 }
             } while ($mediaExists === true);
         } else {
             $media->setName($filename);
-            $media->setUri($dest_folder . $media->getName());
+            $media->setUri($dest_folder.$media->getName());
         }
 
-        $file->move($this->uploadDir . $dest_folder, $media->getName());
-        chmod($this->uploadDir . $dest_folder . $media->getName(), 0664);
+        $file->move($this->uploadDir.$dest_folder, $media->getName());
+        chmod($this->uploadDir.$dest_folder.$media->getName(), 0664);
 
         // Getting the salt defined in parameters.yml
         $secret = $this->container->getParameter('secret');
-        $media->setSecretKey(hash('sha256', $secret . $media->getName() . $media->getUri()));
+        $media->setSecretKey(hash('sha256', $secret.$media->getName().$media->getUri()));
 
         $em->persist($media);
         $em->flush();
@@ -181,7 +200,7 @@ class MediaManager
         $em = $this->entityManager;
         $fs = new Filesystem();
 
-        $file_path = $this->uploadDir . $media->getUri();
+        $file_path = $this->uploadDir.$media->getUri();
 
         try {
             $file = new File($file_path);
@@ -200,7 +219,7 @@ class MediaManager
     public function getUploadDir($filter = null)
     {
         if (!empty($filter)) {
-            return $this->uploadDir . 'filters/' . $filter . '/';
+            return $this->uploadDir.'filters/'.$filter.'/';
         }
 
         return $this->uploadDir;
@@ -209,18 +228,18 @@ class MediaManager
     public function getWebPath(Media $media)
     {
         $request = $this->container->get('request');
-        $dir = $request->getSchemeAndHttpHost() . $request->getBaseUrl() . '/';
+        $dir = $request->getSchemeAndHttpHost().$request->getBaseUrl().'/';
 
-        return $dir . $media->getUri();
+        return $dir.$media->getUri();
     }
 
     public function getAbsolutePath(Media $media, $filter = null)
     {
         $imgSrc = $this->uploadDir;
         if (!empty($filter)) {
-            return $imgSrc . 'filters/' . $filter . '/' . $media->getUri();
+            return $imgSrc.'filters/'.$filter.'/'.$media->getUri();
         } else {
-            return $imgSrc . $media->getUri();
+            return $imgSrc.$media->getUri();
         }
     }
 
@@ -274,20 +293,6 @@ class MediaManager
     public function findFromSecret($secret)
     {
         return $this->entityManager->getRepository('AlpixelMediaBundle:Media')->findOneBySecretKey($secret);
-    }
-
-    public function setAllowedMimeTypes(array $type)
-    {
-        if ($type !== null) {
-            $this->allowedMimetypes = $type;
-        }
-
-        return $this;
-    }
-
-    public function getAllowedMimeTypes()
-    {
-        return $this->allowedMimetypes;
     }
 
     public function convertOctetIn($size, $convert)

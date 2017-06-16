@@ -26,11 +26,14 @@ class Configuration implements ConfigurationInterface
                     ->defaultValue('%kernel.root_dir%/../web/upload/')
                     ->cannotBeEmpty()
                 ->end()
-                ->arrayNode('allowed_mimetypes')
-                    ->prototype('scalar')->end()
-                    ->defaultValue(['image/*', 'application/pdf'])
-                    ->cannotBeEmpty()
-                ->end()
+                ->arrayNode('upload_configurations')->prototype('array')
+                        ->children()
+                            ->arrayNode('allowed_mimetypes')->prototype('scalar')->end()
+                                ->defaultValue(['image/*', 'application/pdf'])
+                                ->cannotBeEmpty()
+                            ->end()
+                        ->end()
+                    ->end()
             ->end();
 
         return $treeBuilder;

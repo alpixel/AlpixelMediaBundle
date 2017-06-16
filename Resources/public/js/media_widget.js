@@ -14,226 +14,226 @@
         // Re-write the saved input value
         function refreshDropzoneValue(resultInput, uploadedFiles) {
 
-              // uploadedFiles is an array, so we use .join method to convert array key to string, with a tag separator #&#
-              resultInput.val(uploadedFiles.join('#&#'));
+            // uploadedFiles is an array, so we use .join method to convert array key to string, with a tag separator #&#
+            resultInput.val(uploadedFiles.join('#&#'));
         }
 
 
         $('.dropzone_widget').each(function (i, el) {
-              Dropzone.autoDiscover = false;
+            Dropzone.autoDiscover = false;
 
-              // Set vars
-              var uploadedFiles = [];
-              var dropzoneId = $(this).data('id');
-              var dropzoneUri = $(this).data('url');
-              var uploadMultiple = ($(this).data('multiple') > 0);
+            // Set vars
+            var uploadedFiles = [];
+            var dropzoneId = $(this).data('id');
+            var dropzoneUri = $(this).data('url');
+            var uploadMultiple = ($(this).data('multiple') > 0);
+            var mimeTypes = $(this).data('allowed-mime-types');
 
-              // Is multiple upload allowed ?
-              if (uploadMultiple)
-                  var maxFile = $(this).data('max-file');
-              else
-                  var maxFile = 1;
+            // Is multiple upload allowed ?
+            if (uploadMultiple)
+                var maxFile = $(this).data('max-file');
+            else
+                var maxFile = 1;
 
-              // Relative to the saved input
-              var resultInput = $('#' + dropzoneId + ' input');
+            // Relative to the saved input
+            var resultInput = $('#' + dropzoneId + ' input');
 
-              var mediaDropzone = new Dropzone("div#" + dropzoneId, {
-                  url: dropzoneUri,
-                  maxFiles: maxFile,
-                  uploadMultiple: uploadMultiple,
-                  parallelUploads: 1,
-                  maxFilesize: 10,
-                  clickable: 'p.add-' + dropzoneId,
-                  acceptedFiles: allowedMimeTypes,
-                  addRemoveLinks: true,
-                  dictDefaultMessage: '',
-                  previewTemplate: $('div#' + dropzoneId).parent().find('.previewTemplateFileDrop').html(),
-                  thumbnailWidth: "140",
-                  thumbnailHeight: "93",
-                  dictInvalidFileType: 'Mauvais type de fichier',
-                  dictRemoveFile: '',
-                  dictCancelUpload: '',
-                  dictCancelUploadConfirmation: 'Confirmer',
-                  dictMaxFilesExceeded: 'Limite de photo atteinte.',
-                  dictFileTooBig: 'Le fichier est trop volumineux (max 10 Mo)',
-                  init: function () {
+            var mediaDropzone = new Dropzone("div#" + dropzoneId, {
+                url: dropzoneUri,
+                maxFiles: maxFile,
+                uploadMultiple: uploadMultiple,
+                parallelUploads: 1,
+                maxFilesize: 10,
+                clickable: 'p.add-' + dropzoneId,
+                acceptedFiles: mimeTypes,
+                addRemoveLinks: true,
+                dictDefaultMessage: '',
+                previewTemplate: $('div#' + dropzoneId).parent().find('.previewTemplateFileDrop').html(),
+                thumbnailWidth: "140",
+                thumbnailHeight: "93",
+                dictInvalidFileType: 'Mauvais type de fichier',
+                dictRemoveFile: '',
+                dictCancelUpload: '',
+                dictCancelUploadConfirmation: 'Confirmer',
+                dictMaxFilesExceeded: 'Limite de photo atteinte.',
+                dictFileTooBig: 'Le fichier est trop volumineux (max 10 Mo)',
+                init: function () {
 
-                      // relative to DropZone
-                      var $this = this;
+                    // relative to DropZone
+                    var $this = this;
 
-                      // set MaxFiles to 1 or more function to uploadMultiple var
-                      $this.options.maxFiles = maxFile;
+                    // set MaxFiles to 1 or more function to uploadMultiple var
+                    $this.options.maxFiles = maxFile;
 
-                      // Load existing images for this okaz
-                      var backup_folder = $('div#' + dropzoneId).parent().find('.dropzone-backup');
+                    // Load existing images for this okaz
+                    var backup_folder = $('div#' + dropzoneId).parent().find('.dropzone-backup');
 
-                      // S'il y a des images existantes au chargement de la page
-                      if (backup_folder.length && backup_folder.has('img')) {
+                    // S'il y a des images existantes au chargement de la page
+                    if (backup_folder.length && backup_folder.has('img')) {
 
-                          // Boucle sur chaque image existante
-                          backup_folder.find('img').each(function (i, el) {
+                        // Boucle sur chaque image existante
+                        backup_folder.find('img').each(function (i, el) {
 
-                              // On set une variable mockFile qui servira ensuite notemment pour le removeFile
-                              var mockFile = {
-                                name: "preview_"+$(this).data('key'),
-                                id : $(this).data('key') // Used for removeFile method
-                              };
+                            // On set une variable mockFile qui servira ensuite notemment pour le removeFile
+                            var mockFile = {
+                                name: "preview_" + $(this).data('key'),
+                                id: $(this).data('key') // Used for removeFile method
+                            };
 
-                              // Get the file ID
-                              var key = $(this).data('key');
+                            // Get the file ID
+                            var key = $(this).data('key');
 
-                              // Let Dropzone know there are images
-                              Dropzone.forElement('div#' + dropzoneId).emit("addedfile", mockFile);
-                              Dropzone.forElement('div#' + dropzoneId).emit("thumbnail", mockFile, $(this).attr('src'));
+                            // Let Dropzone know there are images
+                            Dropzone.forElement('div#' + dropzoneId).emit("addedfile", mockFile);
+                            Dropzone.forElement('div#' + dropzoneId).emit("thumbnail", mockFile, $(this).attr('src'));
 
-                              // Complete the var 'files' with existing files
-                              $this.files.push(mockFile);
+                            // Complete the var 'files' with existing files
+                            $this.files.push(mockFile);
 
-                              // Set to the thumbnail container with the file ID in a data-rel attribut
-                              mockFile.previewTemplate.setAttribute('data-rel', key);
-                              $(mockFile.previewElement).find('.dz-label').text($(this).attr('data-label'));
+                            // Set to the thumbnail container with the file ID in a data-rel attribut
+                            mockFile.previewTemplate.setAttribute('data-rel', key);
+                            $(mockFile.previewElement).find('.dz-label').text($(this).attr('data-label'));
 
-                              // Complete the uploadedFiles with existing files for the resultInput
-                              uploadedFiles.push(key);
-                          });
+                            // Complete the uploadedFiles with existing files for the resultInput
+                            uploadedFiles.push(key);
+                        });
 
-                          // Show all the remove button above existing images
-                          $('.dz-remove').show();
-                      }
-
-
-                      // Show clickable button if limit upload
-                      if ($this.files.length < $this.options.maxFiles) {
-                          $('div#' + dropzoneId).parent().find('.dz-clickable').show();
-                      }
-                      else {
-                          $('div#' + dropzoneId).parent().find('.dz-clickable').hide();
-                      }
-
-                      // Show clickable button only if file length < to the maxFile limit
-                      showHideDropzoneButton(dropzoneId, $this.files.length, $this.options.maxFiles);
+                        // Show all the remove button above existing images
+                        $('.dz-remove').show();
+                    }
 
 
-                      /* Create Waiting message */
-                      if ($('#pictureLoader').length == 0) {
-                          var loader = $('<div />', {
-                              'id': 'pictureLoader',
-                              'html': '<div class="sk-fading-circle"><div class="sk-circle1 sk-circle"></div><div class="sk-circle2 sk-circle"></div><div class="sk-circle3 sk-circle"></div><div class="sk-circle4 sk-circle"></div><div class="sk-circle5 sk-circle"></div><div class="sk-circle6 sk-circle"></div><div class="sk-circle7 sk-circle"></div><div class="sk-circle8 sk-circle"></div><div class="sk-circle9 sk-circle"></div><div class="sk-circle10 sk-circle"></div><div class="sk-circle11 sk-circle"></div><div class="sk-circle12 sk-circle"></div></div><p>Merci de patienter pendant l\'upload de votre fichier...</p>'
-                          }).insertAfter($('form .form-actions')).hide();
-                      }
+                    // Show clickable button if limit upload
+                    if ($this.files.length < $this.options.maxFiles) {
+                        $('div#' + dropzoneId).parent().find('.dz-clickable').show();
+                    }
+                    else {
+                        $('div#' + dropzoneId).parent().find('.dz-clickable').hide();
+                    }
+
+                    // Show clickable button only if file length < to the maxFile limit
+                    showHideDropzoneButton(dropzoneId, $this.files.length, $this.options.maxFiles);
 
 
+                    /* Create Waiting message */
+                    if ($('#pictureLoader').length == 0) {
+                        var loader = $('<div />', {
+                            'id': 'pictureLoader',
+                            'html': '<div class="sk-fading-circle"><div class="sk-circle1 sk-circle"></div><div class="sk-circle2 sk-circle"></div><div class="sk-circle3 sk-circle"></div><div class="sk-circle4 sk-circle"></div><div class="sk-circle5 sk-circle"></div><div class="sk-circle6 sk-circle"></div><div class="sk-circle7 sk-circle"></div><div class="sk-circle8 sk-circle"></div><div class="sk-circle9 sk-circle"></div><div class="sk-circle10 sk-circle"></div><div class="sk-circle11 sk-circle"></div><div class="sk-circle12 sk-circle"></div></div><p>Merci de patienter pendant l\'upload de votre fichier...</p>'
+                        }).insertAfter($('form .form-actions')).hide();
+                    }
 
-                      // -- @-@ --
-                      // EVENT LISTENERS
-                      // -- @-@ --
-                      $this
-                      .on("success", function (file, response) {
 
-                          if(response[0]['error'] == false) {
-                              $('div#' + dropzoneId).trigger('alpixel_media.dropzone.upload.pre.success', file);
-                              file['id'] = response[0].id;
+                    // -- @-@ --
+                    // EVENT LISTENERS
+                    // -- @-@ --
+                    $this
+                        .on("success", function (file, response) {
 
-                              // Set to the thumbnail container with the file ID in a data-rel attribut
-                              file.previewElement.setAttribute('data-rel', response[0].id);
+                            if (response[0]['error'] == false) {
+                                $('div#' + dropzoneId).trigger('alpixel_media.dropzone.upload.pre.success', file);
+                                file['id'] = response[0].id;
 
-                              // Hide progress bar
-                              $(file.previewElement).find('.dz-progress').hide();
+                                // Set to the thumbnail container with the file ID in a data-rel attribut
+                                file.previewElement.setAttribute('data-rel', response[0].id);
 
-                              // Show remove button
-                              $(file.previewElement).find('.dz-remove').show();
+                                // Hide progress bar
+                                $(file.previewElement).find('.dz-progress').hide();
 
-                              // Create an array with the new uploaded file
-                              var newFile = [response[0].id];
+                                // Show remove button
+                                $(file.previewElement).find('.dz-remove').show();
 
-                              if (response[0]['path'] != undefined && $(file.previewElement).find('img').attr('src') == undefined) {
-                                  $(file.previewElement).find('img').attr('src', response[0]['path']);
-                              }
+                                // Create an array with the new uploaded file
+                                var newFile = [response[0].id];
 
-                              if (response[0]['name'] != undefined) {
-                                  $(file.previewElement).find('.dz-label').text(response[0]['name']);
-                              }
+                                if (response[0]['path'] != undefined && $(file.previewElement).find('img').attr('src') == undefined) {
+                                    $(file.previewElement).find('img').attr('src', response[0]['path']);
+                                }
 
-                              // Merge new array with existing files
-                              $.merge(uploadedFiles, newFile);
+                                if (response[0]['name'] != undefined) {
+                                    $(file.previewElement).find('.dz-label').text(response[0]['name']);
+                                }
 
-                              // Refresh input value
-                              refreshDropzoneValue(resultInput, uploadedFiles);
-                              $('div#' + dropzoneId).trigger('alpixel_media.dropzone.upload.post.success', file);
-                          } else {
-                              $('div#' + dropzoneId).trigger('alpixel_media.dropzone.upload.error', file);
-                              Dropzone.forElement('div#' + dropzoneId).emit("error", file, response[0]['errorMessage']);
-                          }
-                      })
+                                // Merge new array with existing files
+                                $.merge(uploadedFiles, newFile);
 
-                      .on("removedfile", function (file) {
-                          // Create a new array. It will use to re-write uploadedFiles array
-                          var newData = [];
+                                // Refresh input value
+                                refreshDropzoneValue(resultInput, uploadedFiles);
+                                $('div#' + dropzoneId).trigger('alpixel_media.dropzone.upload.post.success', file);
+                            } else {
+                                $('div#' + dropzoneId).trigger('alpixel_media.dropzone.upload.error', file);
+                                Dropzone.forElement('div#' + dropzoneId).emit("error", file, response[0]['errorMessage']);
+                            }
+                        })
 
-                          // Fill the newData array
-                          $(uploadedFiles).each(function (i, el) {
-                              if (el != file.id) {
-                                  newData.push(uploadedFiles[i]);
-                              }
-                          });
+                        .on("removedfile", function (file) {
+                            // Create a new array. It will use to re-write uploadedFiles array
+                            var newData = [];
 
-                          // Set uploadedFiles
-                          uploadedFiles = newData;
+                            // Fill the newData array
+                            $(uploadedFiles).each(function (i, el) {
+                                if (el != file.id) {
+                                    newData.push(uploadedFiles[i]);
+                                }
+                            });
 
-                          // Refresh input value
-                          refreshDropzoneValue(resultInput, uploadedFiles);
+                            // Set uploadedFiles
+                            uploadedFiles = newData;
 
-                          // Show clickable button only if file length < to the maxFile limit
-                          showHideDropzoneButton(dropzoneId, $this.files.length, $this.options.maxFiles);
-                      })
+                            // Refresh input value
+                            refreshDropzoneValue(resultInput, uploadedFiles);
 
-                      .on("complete", function (file) {
-                          // Show clickable button only if file length < to the maxFile limit
-                          showHideDropzoneButton(dropzoneId, $this.files.length, $this.options.maxFiles);
+                            // Show clickable button only if file length < to the maxFile limit
+                            showHideDropzoneButton(dropzoneId, $this.files.length, $this.options.maxFiles);
+                        })
 
-                          // Show submit button when uploading is finished
-                          $('form .form-actions').show();
+                        .on("complete", function (file) {
+                            // Show clickable button only if file length < to the maxFile limit
+                            showHideDropzoneButton(dropzoneId, $this.files.length, $this.options.maxFiles);
 
-                          // Hide loader
-                          $('#pictureLoader').hide();
-                      })
+                            // Show submit button when uploading is finished
+                            $('form .form-actions').show();
 
-                      .on("maxfilesreached", function (file) {
-                          // Hide "Ajouter une nouvelle image" button
-                          $('div#' + dropzoneId).parent().find('.dz-clickable').hide();
-                      })
+                            // Hide loader
+                            $('#pictureLoader').hide();
+                        })
 
-                      .on("maxfilesexceeded", function (file) {
-                          // Hide "Ajouter une nouvelle image" button
-                          $('div#' + dropzoneId).parent().find('.dz-clickable').hide();
-                      })
+                        .on("maxfilesreached", function (file) {
+                            // Hide "Ajouter une nouvelle image" button
+                            $('div#' + dropzoneId).parent().find('.dz-clickable').hide();
+                        })
 
-                      .on("error", function (file, message) {
+                        .on("maxfilesexceeded", function (file) {
+                            // Hide "Ajouter une nouvelle image" button
+                            $('div#' + dropzoneId).parent().find('.dz-clickable').hide();
+                        })
 
-                          alert(message);
+                        .on("error", function (file, message) {
 
-                          // Remove Preview file && cancel upload
-                          $this.removeFile(file);
-                      })
+                            alert(message);
 
-                      .on("sending", function (file, xhr, formData) {
-                          // Hide submit button when sending new file
-                          $('form .form-actions').hide();
+                            // Remove Preview file && cancel upload
+                            $this.removeFile(file);
+                        })
 
-                          // Show loader loader
-                          $('#pictureLoader').show();
-                      })
+                        .on("sending", function (file, xhr, formData) {
+                            // Hide submit button when sending new file
+                            $('form .form-actions').hide();
 
-                      .on("addedfile", function (file, xhr, formData) {
+                            // Show loader loader
+                            $('#pictureLoader').show();
+                        })
 
-                          // Check if nb of files is always inferior to the max files allowed
-                          if($this.files.length > $this.options.maxFiles) {
-                              // Remove Preview file && cancel upload
-                              this.removeFile(file);
-                          }
-                      });
-                  }
-          });
+                        .on("addedfile", function (file, xhr, formData) {
+
+                            // Check if nb of files is always inferior to the max files allowed
+                            if ($this.files.length > $this.options.maxFiles) {
+                                // Remove Preview file && cancel upload
+                                this.removeFile(file);
+                            }
+                        });
+                }
+            });
 
         });
     });

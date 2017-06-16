@@ -3,24 +3,25 @@
 {% block alpixel_dropzone_widget %}
     {% set dropzoneId =  form.vars.id %}
 
-    <script type="text/javascript">
-        var allowedMimeTypes = "{{ alpixel_media_allowed_mimetypes()|join(',') }}";
-    </script>
-    <link rel="stylesheet" href="{{asset('bundles/alpixelmedia/css/media_widget.css')}}" />
-    <script type="text/javascript" src="{{asset('bundles/alpixelmedia/js/dropzone.js')}}"></script>
-    <script type="text/javascript" src="{{asset('bundles/alpixelmedia/js/media_widget.js')}}"></script>
+    <link rel="stylesheet" href="{{ asset('bundles/alpixelmedia/css/media_widget.css') }}"/>
+    <script type="text/javascript" src="{{ asset('bundles/alpixelmedia/js/dropzone.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/alpixelmedia/js/media_widget.js') }}"></script>
 
-    <div class="dropzone_widget" data-id="{{dropzoneId}}" data-multiple="{{multiple}}" data-max-file="{{max_nb_file}}" data-url="{{app.request.getSchemeAndHttpHost()}}{{ app.request.baseUrl }}/media/upload">
+    <div class="dropzone_widget" data-id="{{ dropzoneId }}" data-multiple="{{ multiple }}"
+         data-max-file="{{ max_nb_file }}"
+         data-url="{{ app.request.getSchemeAndHttpHost() }}{{ app.request.baseUrl }}/media/upload{{ upload_configuration ? "/"~upload_configuration }}"
+            {{ upload_configuration ? "data-allowed-mime-types="~mimetypes|json_encode~"" }}>
         {% block dropzone_preview_template %}
             <div class="previewTemplateFileDrop" style="display: none;">
-                <div class="dz-preview dz-file-preview" >
+                <div class="dz-preview dz-file-preview">
                     <div class="dz-details">
-                        <img data-dz-thumbnail />
+                        <img data-dz-thumbnail/>
                         <p class="dz-label"></p>
                     </div>
                     <div class="dz-progress"><span class="dz-upload" data-dz-uploadprogress></span></div>
                     <div class="dz-error-message"><span data-dz-errormessage></span></div>
-                    <a href="#" data-dz-remove class="dz-remove" title="Supprimer cette photo"><i class="fa fa-times-circle"></i></a>
+                    <a href="#" data-dz-remove class="dz-remove" title="Supprimer cette photo"><i
+                                class="fa fa-times-circle"></i></a>
                 </div>
             </div>
         {% endblock %}
@@ -36,13 +37,13 @@
         {# DROPZONE #}
         {% block dropzone_element %}
             <div class="center">
-                <p class="add-dropzone add-{{dropzoneId}}">
-                    <i class="fa fa-plus-circle"></i> {{helper}}
+                <p class="add-dropzone add-{{ dropzoneId }}">
+                    <i class="fa fa-plus-circle"></i> {{ helper }}
                 </p>
             </div>
         {% endblock %}
 
-        <div id="{{dropzoneId}}">
+        <div id="{{ dropzoneId }}">
             {{ block('form_widget') }}
         </div>
     </div>

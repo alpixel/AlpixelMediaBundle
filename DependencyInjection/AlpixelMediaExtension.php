@@ -25,7 +25,7 @@ class AlpixelMediaExtension extends Extension implements PrependExtensionInterfa
         $config = $this->processConfiguration($configuration, $configs);
 
         $container->setParameter('alpixel_media.upload_folder', $config['upload_folder']);
-        $container->setParameter('alpixel_media.allowed_mimetypes', $config['allowed_mimetypes']);
+        $container->setParameter('alpixel_media.upload_configurations', $config['upload_configurations']);
 
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
