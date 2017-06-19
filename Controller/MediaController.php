@@ -164,42 +164,50 @@ class MediaController extends Controller
         $src = $this->get('alpixel_media.manager')->getAbsolutePath($media);
         $isImage = @getimagesize($src);
 
-        if ($isImage) {
-            $response->headers->set('Content-disposition', 'inline;filename='.$media->getName());
-            if (!empty($filter) && $isImage) {
-                $src = $this->get('alpixel_media.manager')->getAbsolutePath($media, $filter);
-                $dataManager = $this->get('liip_imagine.data.manager'); // the data manager service
-                $filterManager = $this->get('liip_imagine.filter.manager'); // the filter manager service
-                $uploadDir = $this->get('alpixel_media.manager')->getUploadDir($filter);
+        try {
+            if ($isImage) {
+                $response->headers->set('Content-disposition', 'inline;filename='.$media->getName());
+                if (!empty($filter) && $isImage) {
+                    $src = $this->get('alpixel_media.manager')->getAbsolutePath($media, $filter);
+                    $dataManager = $this->get('liip_imagine.data.manager'); // the data manager service
+                    $filterManager = $this->get('liip_imagine.filter.manager'); // the filter manager service
+                    $uploadDir = $this->get('alpixel_media.manager')->getUploadDir($filter);
 
-                if (!is_file($src)) {
-                    $fs = new Filesystem();
-                    if (!$fs->exists($uploadDir.$media->getFolder())) {
-                        $fs->mkdir($uploadDir.$media->getFolder());
+                    if (!is_file($src)) {
+                        $fs = new Filesystem();
+                        if (!$fs->exists($uploadDir.$media->getFolder())) {
+                            $fs->mkdir($uploadDir.$media->getFolder());
+                        }
+
+                        $path = 'upload/'.$media->getUri();
+
+                        // find the image and determine its type
+                        $image = $dataManager->find($filter, $path);
+
+                        // run the filter
+                        $responseData = $filterManager->applyFilter($image, $filter);
+                        $data = $responseData->getContent();
+                        file_put_contents($uploadDir.$media->getUri(), $data);
+                    } else {
+                        $data = file_get_contents($src);
+                        $lastModified->setTimestamp(filemtime($src));
                     }
-
-                    $path = 'upload/'.$media->getUri();
-
-                    // find the image and determine its type
-                    $image = $dataManager->find($filter, $path);
-
-                    // run the filter
-                    $responseData = $filterManager->applyFilter($image, $filter);
-                    $data = $responseData->getContent();
-                    file_put_contents($uploadDir.$media->getUri(), $data);
                 } else {
-                    $data = file_get_contents($src);
+                    $src = $this->get('alpixel_media.manager')->getAbsolutePath($media);
                     $lastModified->setTimestamp(filemtime($src));
+                    $data = file_get_contents($src);
                 }
             } else {
-                $src = $this->get('alpixel_media.manager')->getAbsolutePath($media);
                 $lastModified->setTimestamp(filemtime($src));
                 $data = file_get_contents($src);
+                $response->headers->set('Content-disposition', 'attachment;filename='.basename($media->getUri()));
             }
-        } else {
-            $lastModified->setTimestamp(filemtime($src));
-            $data = file_get_contents($src);
-            $response->headers->set('Content-disposition', 'attachment;filename='.basename($media->getUri()));
+
+            if ($data === false) {
+                throw $this->createNotFoundException();
+            }
+        } catch (\Exception $e) {
+            throw $this->createNotFoundException($e->getMessage());
         }
 
         $response->setLastModified($lastModified);
