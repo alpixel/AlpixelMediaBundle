@@ -96,6 +96,7 @@ class MediaProvider extends BaseProvider
         $fp = fopen($filepath, 'wb');
         curl_setopt($ch, CURLOPT_FILE, $fp);
         curl_setopt($ch, CURLOPT_HEADER, 0);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 20);
         curl_exec($ch);
         curl_close($ch);
         fclose($fp);
