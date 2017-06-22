@@ -6,7 +6,7 @@
     <div class="dropzone_widget" data-id="{{ dropzoneId }}" data-multiple="{{ multiple }}"
          data-max-file="{{ max_nb_file }}"
          data-url="{{ app.request.getSchemeAndHttpHost() }}{{ app.request.baseUrl }}/media/upload{{ upload_configuration ? "/"~upload_configuration }}"
-            {{ upload_configuration ? "data-allowed-mime-types="~mimetypes|json_encode~"" }}>
+            {{ upload_configuration ? "data-allowed-mime-types="~mimetypes|join(',')~"" }}>
         {% block dropzone_preview_template %}
             <div class="previewTemplateFileDrop" style="display: none;">
                 <div class="dz-preview dz-file-preview">
