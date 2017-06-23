@@ -46,7 +46,7 @@
                 maxFiles: maxFile,
                 uploadMultiple: uploadMultiple,
                 parallelUploads: 1,
-                maxFilesize: 2,
+                maxFilesize: 10,
                 clickable: 'p.add-' + dropzoneId,
                 acceptedFiles: mimeTypes,
                 addRemoveLinks: true,
