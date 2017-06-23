@@ -23,11 +23,14 @@
             Dropzone.autoDiscover = false;
 
             // Set vars
-            var uploadedFiles = [];
-            var dropzoneId = $(this).data('id');
-            var dropzoneUri = $(this).data('url');
-            var uploadMultiple = ($(this).data('multiple') > 0);
-            var mimeTypes = $(this).data('allowed-mime-types');
+            var
+              uploadedFiles = [],
+              dropzoneId = $(this).data('id'),
+              dropzoneUri = $(this).data('url'),
+              uploadMultiple = ($(this).data('multiple') > 0),
+              mimeTypes = $(this).data('allowed-mime-types'),
+              thumbnailWidth = $(this).data('thumbnail-width') || 140,
+              thumbnailHeight = $(this).data('thumbnail-height') || 93;
 
             // Is multiple upload allowed ?
             if (uploadMultiple)
@@ -49,8 +52,8 @@
                 addRemoveLinks: true,
                 dictDefaultMessage: '',
                 previewTemplate: $('div#' + dropzoneId).parent().find('.previewTemplateFileDrop').html(),
-                thumbnailWidth: "140",
-                thumbnailHeight: "93",
+                thumbnailWidth: thumbnailWidth,
+                thumbnailHeight: thumbnailHeight,
                 dictInvalidFileType: 'Mauvais type de fichier',
                 dictRemoveFile: '',
                 dictCancelUpload: '',
