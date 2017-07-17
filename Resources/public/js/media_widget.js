@@ -1,46 +1,51 @@
-(function ($) {
-    $(function () {
+"use strict";
 
-        // Show or hide "Ajouter une nouvelle image" if current number of image is inferior to the max file limit
-        function showHideDropzoneButton(id, nb, max) {
-            if (nb < max) {
-                $('div#' + id).parent().find('.dz-clickable').show();
-            }
-            else {
-                $('div#' + id).parent().find('.dz-clickable').hide();
-            }
+// Show or hide "Ajouter une nouvelle image" if current number of image is inferior to the max file limit
+function showHideDropzoneButton(id, nb, max) {
+    if (nb < max) {
+        jQuery('div#' + id).parent().find('.dz-clickable').show();
+    }
+    else {
+        jQuery('div#' + id).parent().find('.dz-clickable').hide();
+    }
+}
+
+// Re-write the saved input value
+function refreshDropzoneValue(resultInput, uploadedFiles) {
+    // uploadedFiles is an array, so we use .join method to convert array key to string, with a tag separator #&#
+    resultInput.val(uploadedFiles.join('#&#'));
+}
+
+function setupDropzone() {
+    if ($ == undefined) {
+        var $ = jQuery;
+    }
+    $('.dropzone_widget').each(function (i, el) {
+        Dropzone.autoDiscover = false;
+
+        // Set vars
+        var
+            uploadedFiles = [],
+            dropzoneId = $(this).data('id'),
+            dropzoneUri = $(this).data('url'),
+            uploadMultiple = ($(this).data('multiple') > 0),
+            mimeTypes = $(this).data('allowed-mime-types'),
+            thumbnailWidth = ($(this).data('thumbnail-width') === 'undefined') ? 140 : $(this).data('thumbnail-width'),
+            thumbnailHeight = ($(this).data('thumbnail-height') === 'undefined') ? 93 : $(this).data('thumbnail-height');
+
+        if (window.console && window.console.log) {
+            window.console.log('Setup dropzone ' + dropzoneId);
         }
 
-        // Re-write the saved input value
-        function refreshDropzoneValue(resultInput, uploadedFiles) {
 
-            // uploadedFiles is an array, so we use .join method to convert array key to string, with a tag separator #&#
-            resultInput.val(uploadedFiles.join('#&#'));
-        }
+        // Is multiple upload allowed ?
+        var maxFile = 1;
+        if (uploadMultiple)
+            var maxFile = $(this).data('max-file');
 
-
-        $('.dropzone_widget').each(function (i, el) {
-            Dropzone.autoDiscover = false;
-
-            // Set vars
-            var
-              uploadedFiles = [],
-              dropzoneId = $(this).data('id'),
-              dropzoneUri = $(this).data('url'),
-              uploadMultiple = ($(this).data('multiple') > 0),
-              mimeTypes = $(this).data('allowed-mime-types'),
-              thumbnailWidth = (el.dataset.thumbnailWidth === undefined) ? 140 : el.dataset.thumbnailWidth,
-              thumbnailHeight = (el.dataset.thumbnailHeight === undefined) ? 93 : el.dataset.thumbnailHeight;
-
-            // Is multiple upload allowed ?
-            if (uploadMultiple)
-                var maxFile = $(this).data('max-file');
-            else
-                var maxFile = 1;
-
-            // Relative to the saved input
-            var resultInput = $('#' + dropzoneId + ' input');
-
+        // Relative to the saved input
+        var resultInput = $('#' + dropzoneId + ' input');
+        try {
             var mediaDropzone = new Dropzone("div#" + dropzoneId, {
                 url: dropzoneUri,
                 maxFiles: maxFile,
@@ -237,7 +242,14 @@
                         });
                 }
             });
+        } catch (e) {
 
-        });
+        }
+    });
+}
+
+(function ($) {
+    $(function () {
+        setupDropzone();
     });
 })(jQuery);
