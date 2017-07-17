@@ -29,8 +29,8 @@
               dropzoneUri = $(this).data('url'),
               uploadMultiple = ($(this).data('multiple') > 0),
               mimeTypes = $(this).data('allowed-mime-types'),
-              thumbnailWidth = ($(this).data('thumbnail-width') === 'undefined') ? 140 : $(this).data('thumbnail-width'),
-              thumbnailHeight = ($(this).data('thumbnail-height') === 'undefined') ? 93 : $(this).data('thumbnail-height');
+              thumbnailWidth = (el.dataset.thumbnailWidth === 'undefined') ? 140 : el.dataset.thumbnailWidth,
+              thumbnailHeight = (el.dataset.thumbnailHeight === 'undefined') ? 93 : el.dataset.thumbnailHeight;
 
             // Is multiple upload allowed ?
             if (uploadMultiple)
