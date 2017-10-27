@@ -88,16 +88,22 @@ class MediaProvider extends BaseProvider
 
         return $url;
     }
-
+    
     protected function downloadMedia($url, $ext)
     {
         $filepath = sys_get_temp_dir() . '/' . uniqid() . '.' . $ext;
         $ch = curl_init($url);
         $fp = fopen($filepath, 'wb');
-        curl_setopt($ch, CURLOPT_FILE, $fp);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_BINARYTRANSFER,1);
         curl_setopt($ch, CURLOPT_HEADER, 0);
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 20);
-        curl_exec($ch);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+        curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0');
+        $raw = curl_exec($ch);
+        if($raw) {
+            fwrite($fp, $raw);
+        }
         curl_close($ch);
         fclose($fp);
 
