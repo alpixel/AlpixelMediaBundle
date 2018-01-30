@@ -57,6 +57,7 @@ function setupDropzone() {
                 addRemoveLinks: true,
                 dictDefaultMessage: '',
                 previewTemplate: $('div#' + dropzoneId).parent().find('.previewTemplateFileDrop').html(),
+                createImageThumbnails: false,
                 thumbnailWidth: thumbnailWidth,
                 thumbnailHeight: thumbnailHeight,
                 dictInvalidFileType: 'Mauvais type de fichier',
@@ -233,6 +234,33 @@ function setupDropzone() {
                         })
 
                         .on("addedfile", function (file, xhr, formData) {
+                              var self = this;
+                      
+                              try {
+                                  window.loadImage.parseMetaData(file, function (data) {
+
+                                      // use embedded thumbnail if exists.
+                                      if (data.exif) {
+
+                                          var thumbnail = data.exif.get('Thumbnail');
+                                          var orientation = data.exif.get('Orientation');
+
+                                          if (thumbnail && orientation) {
+                                              window.loadImage(thumbnail, function (img) {
+                                                  self.emit('thumbnail', file, img.toDataURL());
+                                              }, { orientation: orientation });
+                                              return;
+                                          }
+                                      }
+                                      // use default implementation for PNG, etc.
+                                      self.createThumbnail(file);
+                                  });
+                              }
+                              catch(err) {
+                                  self.createThumbnail(file);
+                                  console.warn('Merci de mettre à jour le alpixelmediabundle avec la dernière version du load-image.js');
+                                  console.log(err);
+                              }
 
                             // Check if nb of files is always inferior to the max files allowed
                             if ($this.files.length > $this.options.maxFiles) {
