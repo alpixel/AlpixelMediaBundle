@@ -258,7 +258,7 @@ function setupDropzone() {
                               }
                               catch(err) {
                                   self.createThumbnail(file);
-                                  console.warn('Merci de mettre à jour le alpixelmediabundle avec la dernière version du load-image.js');
+                                  console.warn('Merci de mettre à jour le Gulpfile en appellant le load-image.js');
                                   console.log(err);
                               }
 
